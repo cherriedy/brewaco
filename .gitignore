@@ -137,3 +137,20 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/node_modules
+
+# TypeScript build output
+/dist
+
+# OS generated files
+.DS_Store
+
+# Test coverage
+/coverage
