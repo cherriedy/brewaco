@@ -1,0 +1,40 @@
+{
+  "preferences": {
+    "unknownLocation": "Vị trí không xác định",
+    "unknownDevice": "Thiết bị không xác định"
+  },
+  "serverError": "Lỗi máy chủ nội bộ",
+  "validation": "Một số thông tin bạn nhập không hợp lệ. Vui lòng kiểm tra lại các trường được đánh dấu.",
+  "auth": {
+    "userNotFound": "Không tìm thấy người dùng với email này",
+    "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
+    "tokenExpired": "Mã xác thực đã hết hạn, vui lòng yêu cầu mã mới."
+  },
+  "registration": {
+    "success": "Tài khoản của bạn đã được tạo thành công.",
+    "duplicateEmail": "Địa chỉ email này đã được sử dụng. Vui lòng sử dụng email khác hoặc đăng nhập.",
+    "serverError": "Chúng tôi không thể hoàn tất đăng ký do lỗi máy chủ. Vui lòng thử lại sau.",
+    "emptyName": "Tên không được để trống.",
+    "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự.",
+    "passwordUpper": "Mật khẩu phải chứa ít nhất một chữ hoa.",
+    "passwordLower": "Mật khẩu phải chứa ít nhất một chữ thường.",
+    "passwordNumber": "Mật khẩu phải chứa ít nhất một số.",
+    "passwordSpecial": "Mật khẩu phải chứa ít nhất một ký tự đặc biệt."
+  },
+  "login": {
+    "success": "Đăng nhập thành công",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng"
+  },
+  "forgot-password": {
+    "subject": "Yêu cầu đặt lại mật khẩu",
+    "emailSent": "Nếu có tài khoản với email đó, một liên kết đặt lại mật khẩu đã được gửi.",
+    "reset-code": {
+      "mustBeNumber": "Mã đặt lại phải là số.",
+      "passwordLength": "Mã đặt lại phải gồm 6 chữ số.",
+      "validCode": "Mã đặt lại hợp lệ.",
+      "invalidCode": "Mã đặt lại bạn nhập không hợp lệ.",
+      "expiredCode": "Mã đặt lại đã hết hạn. Vui lòng yêu cầu mã mới.",
+      "success": "Bạn đã đặt lại mật khẩu thành công."
+    }
+  }
+}

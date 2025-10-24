@@ -1,0 +1,40 @@
+{
+  "preferences": {
+    "unknownLocation": "Unknown Location",
+    "unknownDevice": "Unknown Device"
+  },
+  "serverError": "Internal server error",
+  "validation": "Some of your input is invalid. Please review the highlighted fields.",
+  "auth": {
+    "userNotFound": "User with this email does not exist",
+    "invalidEmail": "Please provide a valid email address.",
+    "tokenExpired": "Token has expired, please request a new one."
+  },
+  "registration": {
+    "success": "Your account has been created successfully.",
+    "duplicateEmail": "An account with this email already exists. Please use a different email or log in.",
+    "serverError": "We couldn't complete your registration due to a server error. Please try again later.",
+    "emptyName": "Name cannot be empty.",
+    "passwordLength": "Password must be at least 8 characters long.",
+    "passwordUpper": "Password must contain at least one uppercase letter.",
+    "passwordLower": "Password must contain at least one lowercase letter.",
+    "passwordNumber": "Password must contain at least one number.",
+    "passwordSpecial": "Password must contain at least one special character."
+  },
+  "login": {
+    "success": "Login successful",
+    "invalidCredentials": "Email or password is incorrect"
+  },
+  "forgot-password": {
+    "subject": "Password Reset Request",
+    "emailSent": "If an account with that email exists, a password reset link has been sent.",
+    "reset-code": {
+      "mustBeNumber": "Reset code must be a number.",
+      "passwordLength": "Reset code must be a 6-digit number.",
+      "validCode": "The reset code is valid.",
+      "invalidCode": "The reset code you entered is incorrect. Please check and try again.",
+      "expiredCode": "The reset code has expired. Please request a new one.",
+      "success": "You have reset your password successfully."
+    }
+  }
+}
