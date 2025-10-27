@@ -3,12 +3,17 @@
     "unknownLocation": "Unknown Location",
     "unknownDevice": "Unknown Device"
   },
+  "internalError": "An unexpected error occurred. Please try again later.",
   "serverError": "Internal server error",
   "validation": "Some of your input is invalid. Please review the highlighted fields.",
+  "forbidden": "You do not have permission to access this resource.",
+  "notFound": "The requested resource was not found.",
+  "unauthorized": "Unauthorized access. Please log in to continue.",
   "auth": {
     "userNotFound": "User with this email does not exist",
     "invalidEmail": "Please provide a valid email address.",
-    "tokenExpired": "Token has expired, please request a new one."
+    "tokenExpired": "Token has expired, please request a new one.",
+    "invalidToken": "The provided token is invalid."
   },
   "registration": {
     "success": "Your account has been created successfully.",
@@ -23,7 +28,7 @@
   },
   "login": {
     "success": "Login successful",
-    "invalidCredentials": "Email or password is incorrect"
+    "invalidCredentials": "The email or password you entered is incorrect."
   },
   "forgot-password": {
     "subject": "Password Reset Request",

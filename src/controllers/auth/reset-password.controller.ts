@@ -20,13 +20,13 @@ export const resetPassword = async (
 ): Promise<void> => {
   const locale = req.locale;
   try {
-    const jwtSecure = process.env.JWT_SECRET;
-    if (!jwtSecure || typeof jwtSecure !== "string") {
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret || typeof jwtSecret !== "string") {
       throw new MissingEnvVarError("JWT_SECRET");
     }
 
     const data = resetPasswordSchema.parse(req.body);
-    const decoded = jwt.verify(data.token, jwtSecure) as { email: string };
+    const decoded = jwt.verify(data.token, jwtSecret) as { email: string };
     const user = await User.findOne({ email: decoded.email });
     if (!user) {
       return apiError(res, t("auth.userNotFound"), null);

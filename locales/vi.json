@@ -3,12 +3,17 @@
     "unknownLocation": "Vị trí không xác định",
     "unknownDevice": "Thiết bị không xác định"
   },
+  "internalError": "Đã xảy ra lỗi nội bộ. Vui lòng thử lại sau.",
   "serverError": "Lỗi máy chủ nội bộ",
   "validation": "Một số thông tin bạn nhập không hợp lệ. Vui lòng kiểm tra lại các trường được đánh dấu.",
+  "forbidden": "Bạn không có quyền truy cập vào tài nguyên này.",
+  "notFound": "Tài nguyên bạn đang tìm kiếm không tồn tại.",
+  "unauthorized": "Truy cập không được phép. Vui lòng đăng nhập để tiếp tục.",
   "auth": {
     "userNotFound": "Không tìm thấy người dùng với email này",
     "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
-    "tokenExpired": "Mã xác thực đã hết hạn, vui lòng yêu cầu mã mới."
+    "tokenExpired": "Mã xác thực đã hết hạn, vui lòng yêu cầu mã mới.",
+    "invalidToken": "Mã xác thực được cung cấp không hợp lệ."
   },
   "registration": {
     "success": "Tài khoản của bạn đã được tạo thành công.",
@@ -23,7 +28,7 @@
   },
   "login": {
     "success": "Đăng nhập thành công",
-    "invalidCredentials": "Email hoặc mật khẩu không đúng"
+    "invalidCredentials": "Email hoặc mật khẩu bạn nhập không đúng."
   },
   "forgot-password": {
     "subject": "Yêu cầu đặt lại mật khẩu",

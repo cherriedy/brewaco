@@ -1,6 +1,7 @@
 /* eslint-disable perfectionist/sort-interfaces,perfectionist/sort-objects */
 import { model, Schema } from "mongoose";
 import { hashPassword } from "#utils/hash-password.js";
+import { Role } from "#interfaces/role.interface.js";
 
 interface Address {
   city?: string;
@@ -15,7 +16,7 @@ interface User {
   name: string;
   password: string;
   phone?: string;
-  role: "admin" | "customer";
+  role: Role;
   address?: Address;
   createdAt?: Date;
   updatedAt?: Date;
