@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: brewaco-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: brewaco
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - brewaco-network
+
+  # Public API
+  public-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brewaco-public-api
+    restart: unless-stopped
+    command: node dist/apps/public/app.public.js
+    environment:
+      - NODE_ENV=production
+      - PUBLIC_PORT=9001
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/brewaco?authSource=admin
+      - JWT_SECRET=${JWT_SECRET}
+      - MAILERSEND_API_KEY=${MAILERSEND_API_KEY}
+      - MAILERSEND_FROM_EMAIL=${MAILERSEND_FROM_EMAIL}
+      - MAILERSEND_FROM_NAME=${MAILERSEND_FROM_NAME}
+    ports:
+      - "9001:9001"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - brewaco-network
+
+  # Admin API
+  admin-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brewaco-admin-api
+    restart: unless-stopped
+    command: node dist/apps/protected/app.protected.js
+    environment:
+      - NODE_ENV=production
+      - PROTECTED_PORT=9002
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/brewaco?authSource=admin
+      - JWT_SECRET=${JWT_SECRET}
+      - MAILERSEND_API_KEY=${MAILERSEND_API_KEY}
+      - MAILERSEND_FROM_EMAIL=${MAILERSEND_FROM_EMAIL}
+      - MAILERSEND_FROM_NAME=${MAILERSEND_FROM_NAME}
+    ports:
+      - "9002:9002"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - brewaco-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: brewaco-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.docker.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro  # For SSL certificates
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - public-api
+      - admin-api
+    networks:
+      - brewaco-network
+
+networks:
+  brewaco-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  nginx_logs:
+    driver: local
+

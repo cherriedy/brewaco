@@ -1,0 +1,13 @@
+/**
+ * Defines a generic structure for paginated API responses.
+ * Includes metadata for pagination control and navigation.
+ *
+ * @template T - The type of items contained in the `data` array.
+ */
+export type Page<T> = {
+  items: T[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPage: number;
+};

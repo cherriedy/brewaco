@@ -1,6 +1,7 @@
-import { MissingEnvVarError } from "#errors/missing-env-var.error.js";
 import mongoose from "mongoose";
-import logger from "#utils/logger.js";
+
+import logger from "../common/utils/logger.js";
+import { MissingEnvVarError } from "../errors/missing-env-var.error.js";
 
 export const initConnection = async (): Promise<void> => {
   try {
@@ -8,9 +9,9 @@ export const initConnection = async (): Promise<void> => {
     if (!uri) throw new MissingEnvVarError("MONGODB_URI");
 
     await mongoose.connect(uri, {
-      bufferCommands: false,
       autoCreate: false,
       autoIndex: false,
+      bufferCommands: false,
     });
 
     logger.info("Connected to MongoDB successfully");

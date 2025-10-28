@@ -1,5 +1,6 @@
 {
-  "preferences": {
+  , models "deviceContext": {
+
     "unknownLocation": "Vị trí không xác định",
     "unknownDevice": "Thiết bị không xác định"
   },
@@ -28,7 +29,7 @@
   },
   "login": {
     "success": "Đăng nhập thành công",
-    "invalidCredentials": "Email hoặc mật khẩu bạn nhập không đúng."
+    "invalidCredentials": "Email hoặc mật khẩu bạn nhập không đúng.",
   },
   "forgot-password": {
     "subject": "Yêu cầu đặt lại mật khẩu",
@@ -40,6 +41,60 @@
       "invalidCode": "Mã đặt lại bạn nhập không hợp lệ.",
       "expiredCode": "Mã đặt lại đã hết hạn. Vui lòng yêu cầu mã mới.",
       "success": "Bạn đã đặt lại mật khẩu thành công."
+    }
+  "category": {
+    "list": {
+      "success": "Lấy danh sách danh mục thành công."
+    },
+    "get": {
+      "success": "Lấy thông tin danh mục thành công."
+    },
+    "create": {
+      "success": "Tạo danh mục thành công."
+    },
+    "update": {
+      "success": "Cập nhật danh mục thành công."
+    },
+    "delete": {
+      "success": "Xóa danh mục thành công."
+    },
+    "notFound": "Không tìm thấy danh mục.",
+    "invalidId": "ID danh mục không hợp lệ.",
+    "alreadyExists": "Danh mục với tên này đã tồn tại.",
+    "validation": {
+      "nameRequired": "Tên danh mục là bắt buộc."
+    }
+  },
+  "product": {
+    "list": {
+      "success": "Lấy danh sách sản phẩm thành công."
+    },
+    "get": {
+      "success": "Lấy thông tin sản phẩm thành công."
+    },
+    "create": {
+      "success": "Tạo sản phẩm thành công."
+    },
+    "update": {
+      "success": "Cập nhật sản phẩm thành công."
+    },
+    "delete": {
+      "success": "Xóa sản phẩm thành công."
+    },
+    "notFound": "Không tìm thấy sản phẩm.",
+    "invalidId": "ID sản phẩm không hợp lệ.",
+    "alreadyExists": "Sản phẩm với slug này đã tồn tại.",
+    "validation": {
+      "nameRequired": "Tên sản phẩm là bắt buộc.",
+      "categoryIdRequired": "ID danh mục là bắt buộc.",
+      "descriptionRequired": "Mô tả sản phẩm là bắt buộc.",
+      "priceMin": "Giá phải lớn hơn hoặc bằng 0.",
+      "discountMin": "Giảm giá phải lớn hơn hoặc bằng 0.",
+      "discountMax": "Giảm giá phải nhỏ hơn hoặc bằng 100.",
+      "stockMin": "Tồn kho phải lớn hơn hoặc bằng 0.",
+      "originRequired": "Nguồn gốc sản phẩm là bắt buộc.",
+      "typeRequired": "Loại sản phẩm là bắt buộc.",
+      "weightRequired": "Trọng lượng sản phẩm là bắt buộc."
     }
   }
 }

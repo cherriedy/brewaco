@@ -1,3 +1,6 @@
+export const pagingConfig = {
+  pageSize: 10, // Default number of items per page
+};
 export const authConfig = {
   expireIn: 1, // Expiry time in hours for general auth tokens
   password: {

@@ -154,3 +154,10 @@ vite.config.ts.timestamp-*
 
 # Test coverage
 /coverage
+
+# Ignore all markdown files except README.md
+*.md
+!README.md
+
+# Ignore http directory
+/src/http

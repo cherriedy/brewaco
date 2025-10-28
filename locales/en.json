@@ -1,5 +1,5 @@
 {
-  "preferences": {
+  "deviceContext": {
     "unknownLocation": "Unknown Location",
     "unknownDevice": "Unknown Device"
   },
@@ -40,6 +40,61 @@
       "invalidCode": "The reset code you entered is incorrect. Please check and try again.",
       "expiredCode": "The reset code has expired. Please request a new one.",
       "success": "You have reset your password successfully."
+    }
+  },
+  "category": {
+    "list": {
+      "success": "Categories retrieved successfully."
+    },
+    "get": {
+      "success": "Category retrieved successfully."
+    },
+    "create": {
+      "success": "Category created successfully."
+    },
+    "update": {
+      "success": "Category updated successfully."
+    },
+    "delete": {
+      "success": "Category deleted successfully."
+    },
+    "notFound": "Category not found.",
+    "invalidId": "The provided category ID is invalid.",
+    "alreadyExists": "A category with this name already exists.",
+    "validation": {
+      "nameRequired": "Category name is required."
+    }
+  },
+  "product": {
+    "list": {
+      "success": "Products retrieved successfully."
+    },
+    "get": {
+      "success": "Product retrieved successfully."
+    },
+    "create": {
+      "success": "Product created successfully."
+    },
+    "update": {
+      "success": "Product updated successfully."
+    },
+    "delete": {
+      "success": "Product deleted successfully."
+    },
+    "notFound": "Product not found.",
+    "invalidId": "The provided product ID is invalid.",
+    "alreadyExists": "A product with this slug already exists.",
+    "validation": {
+      "nameRequired": "Product name is required.",
+      "categoryIdRequired": "Category ID is required.",
+      "descriptionRequired": "Product description is required.",
+      "priceMin": "Price must be greater than or equal to 0.",
+      "discountMin": "Discount must be greater than or equal to 0.",
+      "discountMax": "Discount must be less than or equal to 100.",
+      "stockMin": "Stock must be greater than or equal to 0.",
+      "originRequired": "Product origin is required.",
+      "typeRequired": "Product type is required.",
+      "weightRequired": "Product weight is required."
     }
   }
 }
