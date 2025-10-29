@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import { Cart as ICart } from "#interfaces/cart.interface.js";
 
 export const cartSchema = new Schema<ICart>(
@@ -23,8 +23,10 @@ export const cartSchema = new Schema<ICart>(
       default: [],
     },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 cartSchema.index({ userId: 1 });
 cartSchema.index({ "items.productId": 1 });
+
+export const Cart = model<ICart>("Cart", cartSchema);

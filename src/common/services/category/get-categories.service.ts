@@ -1,7 +1,7 @@
 import { Category } from "../../models/category.model.js";
 import { Category as ICategory } from "#interfaces/category.interface.js";
 import { pagingConfig } from "#config/app.js";
-import { Page } from "#types/page.js";
+import { Page } from "#interfaces/page.interface.js";
 
 export class GetCategoriesService {
   /**

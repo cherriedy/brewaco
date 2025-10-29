@@ -1,17 +1,18 @@
-import express, { Request, Response } from "express";
-import cors from "cors";
-import helmet from "helmet";
-import morgan from "morgan";
 import authRoutes from "#apps/protected/routes/auth.routes.js";
 import protectedCategoryRoutes from "#apps/protected/routes/category.routes.js";
+import protectedContactRoutes from "#apps/protected/routes/contact.routes.js";
 import protectedProductRoutes from "#apps/protected/routes/product.routes.js";
-import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
 import { authenticationMiddleware } from "#common/middlewares/authentication.middleware.js";
 import { authorizationMiddleware } from "#common/middlewares/authorization.middleware.js";
+import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
 import { internalErrorMiddleware } from "#common/middlewares/internal-error.middleware.js";
 import { initI18n } from "#common/utils/i18n.js";
-import { initConnection } from "#config/database.js";
 import logger from "#common/utils/logger.js";
+import { initConnection } from "#config/database.js";
+import cors from "cors";
+import express, { Request, Response } from "express";
+import helmet from "helmet";
+import morgan from "morgan";
 
 const app = express();
 const port = process.env.PROTECTED_PORT ?? "9002";
@@ -42,6 +43,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/categories", protectedCategoryRoutes);
 app.use("/products", protectedProductRoutes);
+app.use("/contact", protectedContactRoutes);
 
 // Error handling middleware - must be after all routes
 app.use(internalErrorMiddleware);

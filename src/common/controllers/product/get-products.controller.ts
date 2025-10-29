@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { GetProductsService } from "#common/services/product/get-products.service.js";
 import { apiSuccess } from "#common/utils/api-response.js";
 import { t } from "#common/utils/i18n.js";
-import { GetProductsService } from "#common/services/product/get-products.service.js";
 import { pagingConfig } from "#config/app.js";
+import { NextFunction, Request, Response } from "express";
 
 const getProductsService = new GetProductsService();
 
@@ -38,8 +38,6 @@ export const getProducts = async (
     );
     apiSuccess(res, products, t("product.list.success", req.locale));
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      next(error); // Propagate other errors to the global error handler
-    }
+    next(error); // Propagate other errors to the global error handler
   }
 };

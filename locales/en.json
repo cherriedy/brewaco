@@ -9,6 +9,9 @@
   "forbidden": "You do not have permission to access this resource.",
   "notFound": "The requested resource was not found.",
   "unauthorized": "Unauthorized access. Please log in to continue.",
+  "invalidEmail": "Please provide a valid email address.",
+  "invalidUserId": "There is an error, please log in again.",
+  "emailRequired": "Email is required.",
   "auth": {
     "userNotFound": "User with this email does not exist",
     "invalidEmail": "Please provide a valid email address.",
@@ -95,6 +98,40 @@
       "originRequired": "Product origin is required.",
       "typeRequired": "Product type is required.",
       "weightRequired": "Product weight is required."
+    }
+  },
+  "cart": {
+    "list": {
+      "success": "Cart retrieved successfully."
+    },
+    "update": {
+      "success": "Cart updated successfully."
+    },
+    "delete": {
+      "success": "Item removed from cart successfully."
+    },
+    "clear": {
+      "success": "Cart cleared successfully."
+    },
+    "notFound": "Cart not found.",
+    "itemNotFound": "Item not found in cart.",
+    "validation": {
+      "productIdRequired": "Product ID is required.",
+      "itemsRequired": "At least one item is required.",
+      "nonNegativeQuantity": "Item quantity cannot be negative."
+    }
+  },
+  "contact": {
+    "validation": {
+      "message": {
+        "minLength": "Message is too short.",
+        "maxLength": "Message is too long.",
+        "required": "Message is required."
+      },
+      "name": {
+        "minLength": "Name is too short.",
+        "required": "Name is required."
+      }
     }
   }
 }

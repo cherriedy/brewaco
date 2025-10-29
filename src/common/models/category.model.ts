@@ -8,7 +8,7 @@ const categorySchema = new Schema<ICategory>(
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: false },
   },
-  { timestamps: true }, // automatically adds createdAt & updatedAt
+  { timestamps: true, versionKey: false },
 );
 
 categorySchema.pre("validate", function (next) {

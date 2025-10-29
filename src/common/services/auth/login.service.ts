@@ -4,7 +4,7 @@ import { MissingEnvVarError } from "#errors/missing-env-var.error.js";
 import jwt from "jsonwebtoken";
 import { authConfig } from "#config/app.js";
 import { z } from "zod";
-import { Role } from "../../../interfaces/role.interface.js";
+import { Role } from "../../../types/role.js";
 
 const loginSchema = z.object({
   email: z.email(),

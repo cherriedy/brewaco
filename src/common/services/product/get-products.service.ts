@@ -1,5 +1,5 @@
 import { Product } from "../../models/product.model.js";
-import { Page } from "#types/page.js";
+import { Page } from "#interfaces/page.interface.js";
 
 /**
  * Represents a simplified product listing with only essential information

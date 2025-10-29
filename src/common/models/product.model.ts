@@ -23,7 +23,7 @@ const productSchema = new Schema<IProduct>(
     ratingsAverage: { type: Number, default: 0, min: 0, max: 5 },
     ratingsCount: { type: Number, default: 0, min: 0 },
   },
-  { timestamps: true }, // automatically adds createdAt & updatedAt
+  { timestamps: true, versionKey: false }, // automatically adds createdAt & updatedAt
 );
 
 productSchema.index({ slug: 1 });

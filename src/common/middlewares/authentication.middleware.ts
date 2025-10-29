@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Role } from "#interfaces/role.interface.js";
+import { Role } from "#types/role.js";
 import { apiError } from "../utils/api-response.js";
 import { t } from "../utils/i18n.js";
 import { StatusCodes } from "http-status-codes";

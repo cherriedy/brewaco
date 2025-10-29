@@ -1,4 +1,4 @@
-import { Role } from "#interfaces/role.interface.js";
+import { Role } from "#types/role.js";
 import { Address } from "#interfaces/address.interface.js";
 
 export interface User {

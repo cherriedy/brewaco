@@ -4,10 +4,10 @@
  *
  * @template T - The type of items contained in the `data` array.
  */
-export type Page<T> = {
+export interface Page<T> {
   items: T[];
   page: number;
   pageSize: number;
   total: number;
   totalPage: number;
-};
+}

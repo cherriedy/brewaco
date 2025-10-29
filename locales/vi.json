@@ -1,6 +1,5 @@
 {
-  , models "deviceContext": {
-
+  "deviceContext": {
     "unknownLocation": "Vị trí không xác định",
     "unknownDevice": "Thiết bị không xác định"
   },
@@ -10,6 +9,9 @@
   "forbidden": "Bạn không có quyền truy cập vào tài nguyên này.",
   "notFound": "Tài nguyên bạn đang tìm kiếm không tồn tại.",
   "unauthorized": "Truy cập không được phép. Vui lòng đăng nhập để tiếp tục.",
+  "invalidUserId": "Đã có lỗi, vui lòng đăng nhập lại",
+  "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
+  "emailRequired": "Vui lòng nhập địa chỉ email.",
   "auth": {
     "userNotFound": "Không tìm thấy người dùng với email này",
     "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
@@ -29,7 +31,7 @@
   },
   "login": {
     "success": "Đăng nhập thành công",
-    "invalidCredentials": "Email hoặc mật khẩu bạn nhập không đúng.",
+    "invalidCredentials": "Email hoặc mật khẩu bạn nhập không đúng."
   },
   "forgot-password": {
     "subject": "Yêu cầu đặt lại mật khẩu",
@@ -42,6 +44,7 @@
       "expiredCode": "Mã đặt lại đã hết hạn. Vui lòng yêu cầu mã mới.",
       "success": "Bạn đã đặt lại mật khẩu thành công."
     }
+  },
   "category": {
     "list": {
       "success": "Lấy danh sách danh mục thành công."
@@ -95,6 +98,43 @@
       "originRequired": "Nguồn gốc sản phẩm là bắt buộc.",
       "typeRequired": "Loại sản phẩm là bắt buộc.",
       "weightRequired": "Trọng lượng sản phẩm là bắt buộc."
+    }
+  },
+  "cart": {
+    "list": {
+      "success": "Lấy giỏ hàng thành công."
+    },
+    "update": {
+      "success": "Cập nhật giỏ hàng thành công."
+    },
+    "add": {
+      "success": "Thêm sản phẩm vào giỏ hàng thành công."
+    },
+    "delete": {
+      "success": "Xóa sản phẩm khỏi giỏ hàng thành công."
+    },
+    "clear": {
+      "success": "Xóa giỏ hàng thành công."
+    },
+    "notFound": "Không tìm thấy giỏ hàng.",
+    "itemNotFound": "Không tìm thấy sản phẩm trong giỏ hàng.",
+    "validation": {
+      "productIdRequired": "ID sản phẩm là bắt buộc.",
+      "itemsRequired": "Phải có ít nhất một sản phẩm.",
+      "nonNegativeQuantity": "Số lượng sản phẩm phải là số nguyên không âm."
+    }
+  },
+  "contact": {
+    "validation": {
+      "message": {
+        "minLength": "Tin nhắn quá ngắn.",
+        "maxLength": "Tin nhắn quá dài.",
+        "required": "Tin nhắn là bắt buộc."
+      },
+      "name": {
+        "minLength": "Tên quá ngắn.",
+        "required": "Tên là bắt buộc."
+      }
     }
   }
 }

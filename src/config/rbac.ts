@@ -1,8 +1,14 @@
-import { Role } from "#interfaces/role.interface.js";
+import { Role } from "#types/role.js";
 
-export type Resource = "carts" | "categories" | "products" | "users";
 export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export type Permission = "read" | "write" | "update" | "delete";
+export type Resource =
+  | "cart"
+  | "categories"
+  | "contact"
+  | "products"
+  | "reviews"
+  | "users";
 export type Resources = Record<Resource, Permission[]>;
 
 const PERMISSION_MAPPING: Record<Method, Permission> = {
@@ -17,7 +23,8 @@ const RESOURCE_MAPPING: Record<string, Resource> = {
   "^/users/.*": "users",
   "^/categories.*": "categories",
   "^/products.*": "products",
-  "^/carts.*": "carts",
+  "^/cart.*": "cart",
+  "^/contact.*": "contact",
 };
 
 const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
@@ -25,15 +32,40 @@ const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
     users: ["read", "write", "update", "delete"],
     categories: ["read", "write", "update", "delete"],
     products: ["read", "write", "update", "delete"],
-    carts: ["read", "write", "update", "delete"],
+    cart: ["read", "write", "update", "delete"],
+    reviews: ["read"],
+    contact: ["read"],
   },
   customer: {
     users: ["read", "update"],
     categories: ["read"],
     products: ["read"],
-    carts: ["read", "write", "update"],
+    cart: ["read", "write", "update"],
+    reviews: ["read", "write"],
+    contact: [],
   },
 };
+
+/**
+ * Checks if a given role has a specific permission for a resource.
+ * If the resource is not found, it returns false.
+ *
+ * @param role - The role to check (e.g., admin, customer).
+ * @param path - The path representing the resource to check.
+ * @param method - The HTTP method representing the action to check.
+ * @returns True if the role has the permission for the resource, otherwise false.
+ */
+export function hasPermission(
+  role: Role,
+  path: string,
+  method: Method,
+): boolean {
+  const resource = pathToResource(path);
+  if (!resource) return false; // Forbid if resource is not found
+
+  const permission = methodToPermission(method);
+  return RESOURCES_FOR_ROLES[role]?.[resource]?.includes(permission) ?? false;
+}
 
 /**
  * Maps an HTTP method to its corresponding permission.
@@ -60,25 +92,4 @@ function pathToResource(path: string): Resource | undefined {
   return Object.entries(RESOURCE_MAPPING).find(([pattern]) =>
     new RegExp(pattern).test(path),
   )?.[1];
-}
-
-/**
- * Checks if a given role has a specific permission for a resource.
- * If the resource is not found, it returns false.
- *
- * @param role - The role to check (e.g., admin, customer).
- * @param path - The path representing the resource to check.
- * @param method - The HTTP method representing the action to check.
- * @returns True if the role has the permission for the resource, otherwise false.
- */
-export function hasPermission(
-  role: Role,
-  path: string,
-  method: Method,
-): boolean {
-  const resource = pathToResource(path);
-  if (!resource) return false; // Forbid if resource is not found
-
-  const permission = methodToPermission(method);
-  return RESOURCES_FOR_ROLES[role]?.[resource]?.includes(permission) ?? false;
 }

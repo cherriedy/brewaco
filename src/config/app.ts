@@ -19,3 +19,22 @@ export const authConfig = {
     },
   },
 };
+export const reviewConfig = {
+  rating: {
+    minValue: 1, // Min value of rating
+    maxValue: 5, // Max value of rating
+  },
+  comment: {
+    minLength: 10, // Min length of comment
+    maxLength: 500, // Max length of comment
+  },
+};
+export const contactConfig = {
+  name: {
+    minLength: 10, // Min length of name
+  },
+  message: {
+    minLength: 50, // Min length of message
+    maxLength: 500, // Max length of message
+  },
+};

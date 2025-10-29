@@ -23,7 +23,7 @@ const userSchema = new Schema<IUser>(
     resetCode: String,
     resetCodeExp: Date,
   },
-  { timestamps: true }, // automatically adds createdAt & updatedAt
+  { timestamps: true, versionKey: false }, // automatically adds createdAt & updatedAt
 );
 
 // Hash password before saving
