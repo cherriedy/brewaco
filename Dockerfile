@@ -8,6 +8,7 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 
 # Install dependencies
+ENV HUSKY=0
 RUN npm ci
 
 # Copy source code
@@ -26,7 +27,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+ENV HUSKY=0
+RUN npm ci --omit=dev
 
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
