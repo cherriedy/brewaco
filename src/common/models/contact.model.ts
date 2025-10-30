@@ -3,10 +3,10 @@ import { model, Schema } from "mongoose";
 
 const contactSchema = new Schema<IContact>(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    message: { type: String, required: true },
-    state: { type: String, enum: ["new", "replied"], default: "new" },
+    email: { required: true, type: String },
+    message: { required: true, type: String },
+    name: { required: true, type: String },
+    state: { default: "new", enum: ["new", "replied"], type: String },
   },
   { timestamps: { createdAt: true, updatedAt: false }, versionKey: false },
 );

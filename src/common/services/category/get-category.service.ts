@@ -1,5 +1,6 @@
-import { Category } from "../../models/category.model.js";
 import mongoose from "mongoose";
+
+import { Category } from "../../models/category.model.js";
 
 export class GetCategoryService {
   /**

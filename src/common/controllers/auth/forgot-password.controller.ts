@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { apiError, apiSuccess } from "../../utils/api-response.js";
 import { ZodError } from "zod";
+
+import { ForgotPasswordService } from "../../services/auth/forgot-password.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { HandlebarsEngine } from "../../utils/handlebars-engine.js";
 import { t } from "../../utils/i18n.js";
 import logger from "../../utils/logger.js";
-import { HandlebarsEngine } from "../../utils/handlebars-engine.js";
 import { MailerSendSender } from "../../utils/mailersend-sender.js";
-import { ForgotPasswordService } from "../../services/auth/forgot-password.service.js";
 
 export const forgotPassword = async (
   req: Request,
@@ -19,9 +20,9 @@ export const forgotPassword = async (
 
   try {
     const emailData = {
+      date: req.date,
       device: req.device,
       location: req.location,
-      date: req.date,
     };
 
     await forgotPasswordService.forgotPassword(
@@ -43,7 +44,8 @@ export const forgotPassword = async (
 
     // Handle user not found error
     if (error instanceof Error && error.message === "USER_NOT_FOUND") {
-      return apiError(res, t("auth.userNotFound", locale), null, 404);
+      apiError(res, t("auth.userNotFound", locale), null, 404);
+      return;
     }
 
     if (error instanceof Error) {

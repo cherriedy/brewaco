@@ -1,5 +1,5 @@
-import { CreateContactPayload } from "#common/models/validation/contact.validation.js";
 import { Contact } from "#common/models/contact.model.js";
+import { CreateContactPayload } from "#common/models/validation/contact.validation.js";
 
 export class CreateContactService {
   /**

@@ -1,7 +1,7 @@
 import { Role } from "#types/role.js";
 
-export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-export type Permission = "read" | "write" | "update" | "delete";
+export type Method = "DELETE" | "GET" | "PATCH" | "POST" | "PUT";
+export type Permission = "delete" | "read" | "update" | "write";
 export type Resource =
   | "cart"
   | "categories"
@@ -12,37 +12,37 @@ export type Resource =
 export type Resources = Record<Resource, Permission[]>;
 
 const PERMISSION_MAPPING: Record<Method, Permission> = {
+  DELETE: "delete",
   GET: "read",
+  PATCH: "update",
   POST: "write",
   PUT: "update",
-  PATCH: "update",
-  DELETE: "delete",
 };
 
 const RESOURCE_MAPPING: Record<string, Resource> = {
-  "^/users/.*": "users",
-  "^/categories.*": "categories",
-  "^/products.*": "products",
   "^/cart.*": "cart",
+  "^/categories.*": "categories",
   "^/contact.*": "contact",
+  "^/products.*": "products",
+  "^/users/.*": "users",
 };
 
 const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
   admin: {
-    users: ["read", "write", "update", "delete"],
-    categories: ["read", "write", "update", "delete"],
-    products: ["read", "write", "update", "delete"],
     cart: ["read", "write", "update", "delete"],
-    reviews: ["read"],
+    categories: ["read", "write", "update", "delete"],
     contact: ["read"],
+    products: ["read", "write", "update", "delete"],
+    reviews: ["read"],
+    users: ["read", "write", "update", "delete"],
   },
   customer: {
-    users: ["read", "update"],
-    categories: ["read"],
-    products: ["read"],
     cart: ["read", "write", "update"],
-    reviews: ["read", "write"],
+    categories: ["read"],
     contact: [],
+    products: ["read"],
+    reviews: ["read", "write"],
+    users: ["read", "update"],
   },
 };
 

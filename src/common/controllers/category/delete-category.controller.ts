@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { DeleteCategoryService } from "../../services/category/delete-category.service.js";
-import { apiSuccess, apiError } from "../../utils/api-response.js";
-import { t } from "../../utils/i18n.js";
 import { StatusCodes } from "http-status-codes";
+
+import { DeleteCategoryService } from "../../services/category/delete-category.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { t } from "../../utils/i18n.js";
 
 const deleteCategoryService = new DeleteCategoryService();
 
@@ -32,12 +33,13 @@ export const deleteCategory = async (
   } catch (error: unknown) {
     // Handle not found error
     if (error instanceof Error && error.message === "CATEGORY_NOT_FOUND") {
-      return apiError(
+      apiError(
         res,
         t("category.notFound", locale),
         null,
         StatusCodes.NOT_FOUND,
       );
+      return;
     }
 
     if (error instanceof Error) {

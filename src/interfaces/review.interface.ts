@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 
 export interface Review {
-  userId: Types.ObjectId;
-  productId: Types.ObjectId;
-  rating: number;
   comment: string;
   createdAt?: Date;
+  productId: Types.ObjectId;
+  rating: number;
+  userId: Types.ObjectId;
 }

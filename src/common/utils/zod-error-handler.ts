@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
 import { t } from "#common/utils/i18n.js";
+import { ZodError } from "zod";
 
 export const handleZodError = (
   error: ZodError,

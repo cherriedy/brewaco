@@ -1,5 +1,6 @@
-import { Category } from "../../models/category.model.js";
 import { UpdateCategoryPayload } from "#common/models/validation/category.validation.js";
+
+import { Category } from "../../models/category.model.js";
 
 export class UpdateCategoryService {
   /**

@@ -1,5 +1,5 @@
 /**
- * Contract for a template rendering engine used by the application.
+ * Contract for a template rendering meili-search used by the application.
  *
  * Implementations of this interface should be able to render templates
  * (for example Handlebars, EJS, Pug, etc.) and return the rendered HTML
@@ -19,4 +19,3 @@ export interface TemplateEngine {
     variables: Record<string, string>,
   ): Promise<string>;
 }
-

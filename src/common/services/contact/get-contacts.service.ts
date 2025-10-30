@@ -1,6 +1,6 @@
 import { Contact } from "#common/models/contact.model.js";
-import { Contact as IContact } from "#interfaces/contact.interface.js";
 import { Product } from "#common/models/product.model.js";
+import { Contact as IContact } from "#interfaces/contact.interface.js";
 import { Page } from "#interfaces/page.interface.js";
 
 export class GetContactsService {
@@ -20,8 +20,8 @@ export class GetContactsService {
   async getContacts(
     page: number,
     pageSize: number,
-    sortOrder: 1 | -1,
-    sortBy: string = "createdAt",
+    sortOrder: -1 | 1,
+    sortBy = "createdAt",
   ): Promise<Page<IContact>> {
     const contacts = await Contact.find()
       .sort({ [sortBy]: sortOrder })

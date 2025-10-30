@@ -1,6 +1,6 @@
-import mongoose, { Types } from "mongoose";
-import { UpdateCartItemPayload } from "#common/models/validation/cart.validation.js";
 import { Cart } from "#common/models/cart.model.js";
+import { UpdateCartItemPayload } from "#common/models/validation/cart.validation.js";
+import mongoose, { Types } from "mongoose";
 
 export class UpdateCartItemService {
   /**
@@ -46,8 +46,8 @@ export class UpdateCartItemService {
     // If no cart exists, create a new one with the item
     if (!cart) {
       cart = new Cart({
-        userId: _userId,
         items: [item], // Add the item as the first entry
+        userId: _userId,
       });
       await cart.save(); // Save the new cart
       return cart;

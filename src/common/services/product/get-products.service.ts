@@ -1,5 +1,6 @@
-import { Product } from "../../models/product.model.js";
 import { Page } from "#interfaces/page.interface.js";
+
+import { Product } from "../../models/product.model.js";
 
 /**
  * Represents a simplified product listing with only essential information
@@ -7,16 +8,16 @@ import { Page } from "#interfaces/page.interface.js";
  */
 export interface ProductSummary {
   _id: string;
-  name: string;
-  slug: string;
   categoryId: string;
-  price: number;
   discount: number;
-  stock: number;
   images: string[];
-  type: string;
+  name: string;
+  price: number;
   ratingsAverage: number;
   ratingsCount: number;
+  slug: string;
+  stock: number;
+  type: string;
 }
 
 export class GetProductsService {
@@ -34,10 +35,10 @@ export class GetProductsService {
    * @returns Promise resolving to a paginated result containing products and metadata.
    */
   async getProducts(
-    page: number = 0,
+    page = 0,
     pageSize: number,
-    sortOrder: 1 | -1 = -1,
-    sortBy: string = "updatedAt",
+    sortOrder: -1 | 1 = -1,
+    sortBy = "updatedAt",
   ): Promise<Page<ProductSummary>> {
     const products = await Product.find()
       .select(

@@ -1,26 +1,26 @@
-import { model, Schema } from "mongoose";
 import { Cart as ICart } from "#interfaces/cart.interface.js";
+import { model, Schema } from "mongoose";
 
 export const cartSchema = new Schema<ICart>(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      unique: true,
-    },
     items: {
+      default: [],
       type: [
         {
           productId: {
-            type: Schema.Types.ObjectId,
             ref: "Product",
             required: true,
+            type: Schema.Types.ObjectId,
           },
-          quantity: { type: Number, required: true, min: 0 },
+          quantity: { min: 0, required: true, type: Number },
         },
       ],
-      default: [],
+    },
+    userId: {
+      ref: "User",
+      required: true,
+      type: Schema.Types.ObjectId,
+      unique: true,
     },
   },
   { timestamps: true, versionKey: false },

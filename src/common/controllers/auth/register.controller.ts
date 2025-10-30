@@ -1,9 +1,10 @@
-import { t } from "../../utils/i18n.js";
-import { apiError, apiSuccess } from "../../utils/api-response.js";
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import { handleZodError } from "../../utils/zod-error-handler.js";
+
 import { RegisterService } from "../../services/auth/register.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { t } from "../../utils/i18n.js";
+import { handleZodError } from "../../utils/zod-error-handler.js";
 
 const registerService = new RegisterService();
 
@@ -29,12 +30,14 @@ export const register = async (
     // Handle Zod validation errors
     if (error instanceof ZodError) {
       const validationErrors = handleZodError(error, locale);
-      return apiError(res, t("validation", locale), validationErrors);
+      apiError(res, t("validation", locale), validationErrors);
+      return;
     }
 
     // Handle user exists error
     if (error instanceof Error && error.message === "USER_EXISTS") {
-      return apiError(res, t("registration.duplicateEmail", locale), null, 409);
+      apiError(res, t("registration.duplicateEmail", locale), null, 409);
+      return;
     }
 
     if (error instanceof Error) {

@@ -1,9 +1,9 @@
 import { ContactState } from "#types/contact-state.js";
 
 export interface Contact {
-  name: string;
+  createdAt?: Date;
   email: string;
   message: string;
+  name: string;
   state: ContactState;
-  createdAt?: Date;
 }

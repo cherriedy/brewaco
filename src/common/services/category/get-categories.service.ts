@@ -1,7 +1,8 @@
-import { Category } from "../../models/category.model.js";
-import { Category as ICategory } from "#interfaces/category.interface.js";
 import { pagingConfig } from "#config/app.js";
+import { Category as ICategory } from "#interfaces/category.interface.js";
 import { Page } from "#interfaces/page.interface.js";
+
+import { Category } from "../../models/category.model.js";
 
 export class GetCategoriesService {
   /**
@@ -17,9 +18,9 @@ export class GetCategoriesService {
    * @returns Promise resolving to a paginated result containing categories and metadata.
    */
   async getCategories(
-    page: number = 0,
+    page = 0,
     pageSize: number,
-    sortOrder: 1 | -1 = -1,
+    sortOrder: -1 | 1 = -1,
     sortBy: keyof ICategory = "updatedAt",
   ): Promise<Page<ICategory>> {
     const categories = await Category.find()

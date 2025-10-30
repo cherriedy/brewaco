@@ -1,20 +1,20 @@
-import { model, Schema } from "mongoose";
 import { Review as IReview } from "#interfaces/review.interface.js";
+import { model, Schema } from "mongoose";
 
 export const reviewSchema = new Schema<IReview>(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    comment: { type: String },
     productId: {
-      type: Schema.Types.ObjectId,
       ref: "Product",
       required: true,
+      type: Schema.Types.ObjectId,
     },
-    rating: { type: Number, min: 1, max: 5 },
-    comment: { type: String },
+    rating: { max: 5, min: 1, type: Number },
+    userId: {
+      ref: "User",
+      required: true,
+      type: Schema.Types.ObjectId,
+    },
   },
   { timestamps: { createdAt: true, updatedAt: false } },
 );

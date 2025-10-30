@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { GetProductService } from "../../services/product/get-product.service.js";
-import { apiSuccess, apiError } from "../../utils/api-response.js";
-import { t } from "../../utils/i18n.js";
 import { StatusCodes } from "http-status-codes";
+
+import { GetProductService } from "../../services/product/get-product.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { t } from "../../utils/i18n.js";
 
 const getProductService = new GetProductService();
 
@@ -28,20 +29,22 @@ export const getProduct = async (
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message === "INVALID_PRODUCT_ID") {
-        return apiError(
+        apiError(
           res,
           t("product.invalidId", locale),
           null,
           StatusCodes.NOT_FOUND,
         );
+        return;
       }
       if (error.message === "PRODUCT_NOT_FOUND") {
-        return apiError(
+        apiError(
           res,
           t("product.notFound", locale),
           null,
           StatusCodes.NOT_FOUND,
         );
+        return;
       }
     }
 

@@ -1,32 +1,40 @@
-import { User } from "../../models/user.model.js";
-import { z } from "zod";
-import { authConfig } from "../../../config/app.js";
 import jwt from "jsonwebtoken";
+import { z } from "zod";
+
+import { authConfig } from "../../../config/app.js";
 import { MissingEnvVarError } from "../../../errors/missing-env-var.error.js";
+import { User } from "../../models/user.model.js";
 
 const codeLength = authConfig.pwForgot.resetCode.length;
 const validateResetCodeSchema = z.object({
-  email: z.email({ message: "auth.invalidEmail" }),
   code: z
     .string({ message: "forgot-password.reset-code.mustBeNumber" })
     .length(codeLength, {
       message: "forgot-password.reset-code.passwordLength",
     }),
+  email: z.email({ message: "auth.invalidEmail" }),
 });
 
 export type ValidateResetCodePayload = z.infer<typeof validateResetCodeSchema>;
 
 export class ValidateResetCodeService {
   /**
-   * Validates the provided reset code data using the Zod schema.
-   * Ensures the email format and reset code length are correct.
+   * Orchestrates the full reset code validation workflow:
+   *  1. Validates the input payload structure and types using Zod.
+   *  2. Checks if the user exists for the provided email.
+   *  3. Verifies the reset code matches and is not expired.
+   *  4. Generates and returns a temporary JWT token for password reset.
    *
-   * @param data - The raw input data containing email and reset code.
-   * @returns The validated and typed reset code payload.
-   * @throws ZodError if validation fails due to incorrect email or code format.
+   * @param data - Raw input containing email and reset code.
+   * @returns An object with a signed JWT reset token.
+   * @throws ZodError if input validation fails.
+   * @throws Error if user is not found, code is invalid, or code is expired.
    */
-  private validateResetCodePayload(data: unknown): ValidateResetCodePayload {
-    return validateResetCodeSchema.parse(data);
+  async validateResetCode(data: unknown): Promise<{ resetToken: string }> {
+    const validatedData = this.validateResetCodePayload(data);
+    await this.verifyResetCode(validatedData.email, validatedData.code);
+    const resetToken = this.generateResetToken(validatedData.email);
+    return { resetToken };
   }
 
   /**
@@ -42,27 +50,6 @@ export class ValidateResetCodeService {
       throw new Error("USER_NOT_FOUND");
     }
     return user;
-  }
-
-  /**
-   * Verifies the reset code for a user.
-   *
-   * Checks if the user exists, the reset code matches, and the code is not expired.
-   *
-   * @param email - The user's email address to verify.
-   * @param code - The reset code provided by the user.
-   * @throws Error if the user does not exist, the reset code is invalid, or the code has expired.
-   */
-  private async verifyResetCode(email: string, code: string): Promise<void> {
-    const user = await this.findUserByEmail(email);
-    // The reset code is invalid
-    if (!user.resetCode || user.resetCode !== code) {
-      throw new Error("INVALID_CODE");
-    }
-    // The reset code has expired
-    if (user.resetCodeExp && user.resetCodeExp < new Date()) {
-      throw new Error("EXPIRED_CODE");
-    }
   }
 
   /**
@@ -90,21 +77,35 @@ export class ValidateResetCodeService {
   }
 
   /**
-   * Orchestrates the full reset code validation workflow:
-   *  1. Validates the input payload structure and types using Zod.
-   *  2. Checks if the user exists for the provided email.
-   *  3. Verifies the reset code matches and is not expired.
-   *  4. Generates and returns a temporary JWT token for password reset.
+   * Validates the provided reset code data using the Zod schema.
+   * Ensures the email format and reset code length are correct.
    *
-   * @param data - Raw input containing email and reset code.
-   * @returns An object with a signed JWT reset token.
-   * @throws ZodError if input validation fails.
-   * @throws Error if user is not found, code is invalid, or code is expired.
+   * @param data - The raw input data containing email and reset code.
+   * @returns The validated and typed reset code payload.
+   * @throws ZodError if validation fails due to incorrect email or code format.
    */
-  async validateResetCode(data: unknown): Promise<{ resetToken: string }> {
-    const validatedData = this.validateResetCodePayload(data);
-    await this.verifyResetCode(validatedData.email, validatedData.code);
-    const resetToken = this.generateResetToken(validatedData.email);
-    return { resetToken };
+  private validateResetCodePayload(data: unknown): ValidateResetCodePayload {
+    return validateResetCodeSchema.parse(data);
+  }
+
+  /**
+   * Verifies the reset code for a user.
+   *
+   * Checks if the user exists, the reset code matches, and the code is not expired.
+   *
+   * @param email - The user's email address to verify.
+   * @param code - The reset code provided by the user.
+   * @throws Error if the user does not exist, the reset code is invalid, or the code has expired.
+   */
+  private async verifyResetCode(email: string, code: string): Promise<void> {
+    const user = await this.findUserByEmail(email);
+    // The reset code is invalid
+    if (!user.resetCode || user.resetCode !== code) {
+      throw new Error("INVALID_CODE");
+    }
+    // The reset code has expired
+    if (user.resetCodeExp && user.resetCodeExp < new Date()) {
+      throw new Error("EXPIRED_CODE");
+    }
   }
 }

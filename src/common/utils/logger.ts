@@ -1,8 +1,8 @@
 /* eslint-disable perfectionist/sort-objects */
 import fs from "fs";
 import path from "path";
-import { createLogger, format, Logger, transports } from "winston";
 import { fileURLToPath } from "url";
+import { createLogger, format, Logger, transports } from "winston";
 
 // Define custom log levels for Winston, allowing for more granular control
 // 'error' is the most severe, 'debug' is the least

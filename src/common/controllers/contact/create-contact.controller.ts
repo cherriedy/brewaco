@@ -22,7 +22,13 @@ export const createContact = async (
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       const validationErrors = handleZodError(error, locale);
-      return apiError(res, t("validation", locale), validationErrors, StatusCodes.BAD_REQUEST);
+      apiError(
+        res,
+        t("validation", locale),
+        validationErrors,
+        StatusCodes.BAD_REQUEST,
+      );
+      return;
     }
     next(error);
   }

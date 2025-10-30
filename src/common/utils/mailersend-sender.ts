@@ -1,6 +1,7 @@
-import { EmailSender } from "#interfaces/email-sender.interface.js";
 import logger from "#common/utils/logger.js";
+import { EmailSender } from "#interfaces/email-sender.interface.js";
 import { EmailParams, MailerSend, Recipient, Sender } from "mailersend";
+
 import { MissingEnvVarError } from "../../errors/missing-env-var.error.js";
 
 /**
@@ -8,9 +9,9 @@ import { MissingEnvVarError } from "../../errors/missing-env-var.error.js";
  * It loads API credentials from environment variables and provides a method to send emails.
  */
 export class MailerSendSender implements EmailSender {
+  private readonly appName: string;
   private readonly mailer: MailerSend;
   private readonly sentFrom: string;
-  private readonly appName: string;
 
   constructor() {
     // Load API key from environment

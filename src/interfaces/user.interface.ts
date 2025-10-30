@@ -1,17 +1,17 @@
-import { Role } from "#types/role.js";
 import { Address } from "#interfaces/address.interface.js";
+import { Role } from "#types/role.js";
 
 export interface User {
+  address?: Address;
+  createdAt?: Date;
   email: string;
   name: string;
   password: string;
   phone?: string;
-  role: Role;
-  address?: Address;
-  createdAt?: Date;
-  updatedAt?: Date;
-  resetToken?: string;
-  resetTokenExp?: Date;
   resetCode?: string;
   resetCodeExp?: Date;
+  resetToken?: string;
+  resetTokenExp?: Date;
+  role: Role;
+  updatedAt?: Date;
 }

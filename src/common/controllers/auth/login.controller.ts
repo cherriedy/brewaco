@@ -1,10 +1,11 @@
-import { apiError, apiSuccess } from "../../utils/api-response.js";
-import { NextFunction, Request, Response } from "express";
-import { z } from "zod";
-import { LoginService } from "../../services/auth/login.service.js";
 import { t } from "#common/utils/i18n.js";
-import { StatusCodes } from "http-status-codes";
 import { handleZodError } from "#common/utils/zod-error-handler.js";
+import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { z } from "zod";
+
+import { LoginService } from "../../services/auth/login.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
 
 const loginService = new LoginService();
 
@@ -38,23 +39,26 @@ const loginHandler =
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         const validationErrors = handleZodError(error, locale);
-        return apiError(res, t("validation", locale), validationErrors);
+        apiError(res, t("validation", locale), validationErrors);
+        return;
       }
       if (error instanceof Error && error.message === "ROLE_NOT_ALLOWED") {
-        return apiError(
+        apiError(
           res,
           t("login.invalidCredentials", locale),
           null,
           StatusCodes.BAD_REQUEST,
         );
+        return;
       }
       if (error instanceof Error && error.message === "INVALID_CREDENTIALS") {
-        return apiError(
+        apiError(
           res,
           t("login.invalidCredentials", locale),
           null,
           StatusCodes.BAD_REQUEST,
         );
+        return;
       }
       if (error instanceof Error) {
         next(error);

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import geoip from "geoip-lite";
+
 import { t } from "../utils/i18n.js";
 
 declare module "express-serve-static-core" {

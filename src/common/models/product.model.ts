@@ -1,7 +1,11 @@
-/* eslint-disable perfectionist/sort-interfaces,perfectionist/sort-objects */
+/* eslint-disable perfectionist/sort-objects */
+import {
+  onProductDelete,
+  onProductUpsert,
+} from "#common/services/search/product-meili.service.js";
+import { getSlug } from "#common/utils/text-utilities.js";
 import { Product as IProduct } from "#interfaces/product.interface.js";
 import { model, Schema } from "mongoose";
-import { getSlug } from "#common/utils/text-utilities.js";
 
 const productSchema = new Schema<IProduct>(
   {
@@ -38,6 +42,16 @@ productSchema.pre("validate", function (next) {
     this.slug = getSlug(this.name);
     next();
   }
+});
+
+// After saving a product, update the MeiliSearch index asynchronously
+productSchema.post("save", async function (doc, next) {
+  onProductUpsert(doc).then(() => { next(); });
+});
+
+// After deleting a product, remove it from the MeiliSearch index asynchronously
+productSchema.post("findOneAndDelete", async function (doc, next) {
+  onProductDelete(doc._id.toString()).then(() => { next(); });
 });
 
 export const Product = model<IProduct>("Product", productSchema);

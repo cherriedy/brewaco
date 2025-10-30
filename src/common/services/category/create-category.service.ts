@@ -1,8 +1,9 @@
-import { Category } from "../../models/category.model.js";
 import {
   CreateCategoryPayload,
   createCategorySchema,
 } from "#common/models/validation/category.validation.js";
+
+import { Category } from "../../models/category.model.js";
 
 export class CreateCategoryService {
   /**

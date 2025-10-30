@@ -1,12 +1,12 @@
-import { model, Schema } from "mongoose";
-import { Category as ICategory } from "#interfaces/category.interface.js";
 import { getSlug } from "#common/utils/text-utilities.js";
+import { Category as ICategory } from "#interfaces/category.interface.js";
+import { model, Schema } from "mongoose";
 
 const categorySchema = new Schema<ICategory>(
   {
-    name: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    description: { type: String, required: false },
+    description: { required: false, type: String },
+    name: { required: true, type: String },
+    slug: { required: true, type: String, unique: true },
   },
   { timestamps: true, versionKey: false },
 );

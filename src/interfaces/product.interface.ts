@@ -1,19 +1,20 @@
 import mongoose, { Types } from "mongoose";
 
 export interface Product {
-  name: string;
-  slug: string;
+  _id: Types.ObjectId;
   categoryId: Types.ObjectId;
+  createdAt?: Date;
   description: string;
-  price: number;
   discount: number;
-  stock: number;
   images: string[];
+  name: string;
   origin: string;
-  type: string;
-  weight: string;
+  price: number;
   ratingsAverage: number;
   ratingsCount: number;
-  createdAt?: Date;
+  slug: string;
+  stock: number;
+  type: string;
   updatedAt?: Date;
+  weight: string;
 }

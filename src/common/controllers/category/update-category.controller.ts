@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from "express";
-import { UpdateCategoryService } from "../../services/category/update-category.service.js";
-import { apiSuccess, apiError } from "../../utils/api-response.js";
-import { t } from "../../utils/i18n.js";
-import { z } from "zod";
 import { updateCategorySchema } from "#common/models/validation/category.validation.js";
 import { handleZodError } from "#common/utils/zod-error-handler.js";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { z } from "zod";
+
+import { UpdateCategoryService } from "../../services/category/update-category.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { t } from "../../utils/i18n.js";
 
 const updateCategoryService = new UpdateCategoryService();
 
@@ -46,17 +47,19 @@ export const updateCategory = async (
     // Handle validation errors from Zod
     if (error instanceof z.ZodError) {
       const validationErrors = handleZodError(error, locale);
-      return apiError(res, t("validation", locale), validationErrors);
+      apiError(res, t("validation", locale), validationErrors);
+      return;
     }
 
     // Handle not found error
     if (error instanceof Error && error.message === "CATEGORY_NOT_FOUND") {
-      return apiError(
+      apiError(
         res,
         t("category.notFound", locale),
         null,
         StatusCodes.NOT_FOUND,
       );
+      return;
     }
 
     if (error instanceof Error) {

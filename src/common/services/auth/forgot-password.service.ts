@@ -1,11 +1,12 @@
-import { User } from "../../models/user.model.js";
-import { emailSchema } from "../../models/validation/auth.validation.js";
-import { z } from "zod";
-import crypto from "crypto";
-import { authConfig } from "../../../config/app.js";
+import { DeviceContext } from "#interfaces/device-context.interface.js";
 import { EmailSender } from "#interfaces/email-sender.interface.js";
 import { TemplateEngine } from "#interfaces/template-engine.interface.js";
-import { DeviceContext } from "#interfaces/device-context.interface.js";
+import crypto from "crypto";
+import { z } from "zod";
+
+import { authConfig } from "../../../config/app.js";
+import { User } from "../../models/user.model.js";
+import { emailSchema } from "../../models/validation/auth.validation.js";
 
 const forgotPasswordSchema = z.object({ email: emailSchema });
 
@@ -18,15 +19,35 @@ export class ForgotPasswordService {
   ) {}
 
   /**
-   * Validates the forgot password request payload using the defined Zod schema.
-   * Ensures the provided data contains a valid email address structure.
+   * Orchestrates the entire forgot password workflow for a user.
+   *  1. Validates the incoming payload to ensure a proper email format.
+   *  2. Checks if a user exists for the provided email, throwing "USER_NOT_FOUND" if absent.
+   *  3. Generates a secure, time-limited reset code.
+   *  4. Persists the reset code and its expiration to the user's record.
+   *  5. Sends a password reset email containing the code and device context information.
    *
-   * @param data - The raw payload received from the client (typically from a form submission).
-   * @returns The parsed and validated forgot password payload with a guaranteed email property.
-   * @throws ZodError if the payload does not match the expected schema (e.g., missing or invalid email).
+   * @param data - Raw payload from the client, expected to contain an email.
+   * @param emailData - Contextual information (device, location, date) for the email template.
+   * @param emailSubject - Subject line for the password reset email.
+   * @throws ZodError - If payload validation fails (invalid or missing email).
+   * @throws Error - If no user is found for the provided email.
    */
-  private validateForgotPasswordPayload(data: unknown): ForgotPasswordPayload {
-    return forgotPasswordSchema.parse(data);
+  async forgotPassword(
+    data: unknown,
+    emailData: DeviceContext,
+    emailSubject: string,
+  ): Promise<void> {
+    const validatedData = this.validateForgotPasswordPayload(data);
+    await this.findUserByEmail(validatedData.email);
+
+    const { code, expiresAt } = this.generateResetCode();
+    await this.saveResetCode(validatedData.email, code, expiresAt);
+    await this.sendResetEmail(
+      validatedData.email,
+      code,
+      emailData,
+      emailSubject,
+    );
   }
 
   /**
@@ -109,9 +130,9 @@ export class ForgotPasswordService {
     const variables: Record<string, string> = {
       code,
       codeExpiryMinutes: codeExpire.toString(),
+      date: deviceContext.date,
       device: deviceContext.device,
       location: deviceContext.location,
-      date: deviceContext.date,
     };
 
     // Render the HTML email template with variables
@@ -125,34 +146,14 @@ export class ForgotPasswordService {
   }
 
   /**
-   * Orchestrates the entire forgot password workflow for a user.
-   *  1. Validates the incoming payload to ensure a proper email format.
-   *  2. Checks if a user exists for the provided email, throwing "USER_NOT_FOUND" if absent.
-   *  3. Generates a secure, time-limited reset code.
-   *  4. Persists the reset code and its expiration to the user's record.
-   *  5. Sends a password reset email containing the code and device context information.
+   * Validates the forgot password request payload using the defined Zod schema.
+   * Ensures the provided data contains a valid email address structure.
    *
-   * @param data - Raw payload from the client, expected to contain an email.
-   * @param emailData - Contextual information (device, location, date) for the email template.
-   * @param emailSubject - Subject line for the password reset email.
-   * @throws ZodError - If payload validation fails (invalid or missing email).
-   * @throws Error - If no user is found for the provided email.
+   * @param data - The raw payload received from the client (typically from a form submission).
+   * @returns The parsed and validated forgot password payload with a guaranteed email property.
+   * @throws ZodError if the payload does not match the expected schema (e.g., missing or invalid email).
    */
-  async forgotPassword(
-    data: unknown,
-    emailData: DeviceContext,
-    emailSubject: string,
-  ): Promise<void> {
-    const validatedData = this.validateForgotPasswordPayload(data);
-    await this.findUserByEmail(validatedData.email);
-
-    const { code, expiresAt } = this.generateResetCode();
-    await this.saveResetCode(validatedData.email, code, expiresAt);
-    await this.sendResetEmail(
-      validatedData.email,
-      code,
-      emailData,
-      emailSubject,
-    );
+  private validateForgotPasswordPayload(data: unknown): ForgotPasswordPayload {
+    return forgotPasswordSchema.parse(data);
   }
 }

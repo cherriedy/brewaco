@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { DeleteProductService } from "../../services/product/delete-product.service.js";
-import { apiSuccess, apiError } from "../../utils/api-response.js";
-import { t } from "../../utils/i18n.js";
 import { StatusCodes } from "http-status-codes";
+
+import { DeleteProductService } from "../../services/product/delete-product.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { t } from "../../utils/i18n.js";
 
 const deleteProductService = new DeleteProductService();
 
@@ -32,22 +33,19 @@ export const deleteProduct = async (
   } catch (error: unknown) {
     // Handle invalid ID error
     if (error instanceof Error && error.message === "INVALID_PRODUCT_ID") {
-      return apiError(
+      apiError(
         res,
         t("product.invalidId", locale),
         null,
         StatusCodes.NOT_FOUND,
       );
+      return;
     }
 
     // Handle not found error
     if (error instanceof Error && error.message === "PRODUCT_NOT_FOUND") {
-      return apiError(
-        res,
-        t("product.notFound", locale),
-        null,
-        StatusCodes.NOT_FOUND,
-      );
+      apiError(res, t("product.notFound", locale), null, StatusCodes.NOT_FOUND);
+      return;
     }
 
     if (error instanceof Error) {

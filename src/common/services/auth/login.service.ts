@@ -1,9 +1,10 @@
 import { User } from "#common/models/user.model.js";
 import { comparePassword } from "#common/utils/hash-password.js";
+import { authConfig } from "#config/app.js";
 import { MissingEnvVarError } from "#errors/missing-env-var.error.js";
 import jwt from "jsonwebtoken";
-import { authConfig } from "#config/app.js";
 import { z } from "zod";
+
 import { Role } from "../../../types/role.js";
 
 const loginSchema = z.object({
@@ -14,15 +15,32 @@ export type AuthCredentials = z.infer<typeof loginSchema>;
 
 export class LoginService {
   /**
-   * Validates the provided login data against the defined Zod schema.
-   * Ensures the data contains a valid email and a non-empty password string.
+   * Orchestrates the complete login process for a user.
    *
-   * @param data - The raw login data object to validate (typically from a request body).
-   * @returns The validated and typed login credentials.
-   * @throws ZodError if the data does not conform to the schema (invalid email or missing fields).
+   * 1. Validates the incoming login data using a Zod schema to ensure correct structure and types.
+   * 2. Authenticates the user by checking if the email exists and the password matches the stored hash.
+   * 3. Generates a signed JWT token containing the user's ID and role, with an expiration time.
+   *
+   * @param data - The raw login data object, typically from an HTTP request body.
+   * @param allowedRoles - Optional array of roles that are allowed to log in. If provided, the user's role must be in this array.
+   * @returns An object containing the signed JWT token for the authenticated user.
+   * @throws ZodError if the input data fails validation (e.g., invalid email format, missing fields).
+   * @throws Error with message "INVALID_CREDENTIALS" if authentication fails (user not found or password mismatch).
+   * @throws Error with message "ROLE_NOT_ALLOWED" if the user's role is not in the allowedRoles array.
+   * @throws MissingEnvVarError if the JWT secret is not set in the environment variables.
    */
-  private validateCredentials(data: unknown): AuthCredentials {
-    return loginSchema.parse(data);
+  async login(
+    data: unknown,
+    allowedRoles?: Role[],
+  ): Promise<{ token: string }> {
+    const validatedData = this.validateCredentials(data);
+    const user = await this.authenticateUser(
+      validatedData.email,
+      validatedData.password,
+      allowedRoles,
+    );
+    const token = this.generateToken(user.id, user.role);
+    return { token };
   }
 
   /**
@@ -87,31 +105,14 @@ export class LoginService {
   }
 
   /**
-   * Orchestrates the complete login process for a user.
+   * Validates the provided login data against the defined Zod schema.
+   * Ensures the data contains a valid email and a non-empty password string.
    *
-   * 1. Validates the incoming login data using a Zod schema to ensure correct structure and types.
-   * 2. Authenticates the user by checking if the email exists and the password matches the stored hash.
-   * 3. Generates a signed JWT token containing the user's ID and role, with an expiration time.
-   *
-   * @param data - The raw login data object, typically from an HTTP request body.
-   * @param allowedRoles - Optional array of roles that are allowed to log in. If provided, the user's role must be in this array.
-   * @returns An object containing the signed JWT token for the authenticated user.
-   * @throws ZodError if the input data fails validation (e.g., invalid email format, missing fields).
-   * @throws Error with message "INVALID_CREDENTIALS" if authentication fails (user not found or password mismatch).
-   * @throws Error with message "ROLE_NOT_ALLOWED" if the user's role is not in the allowedRoles array.
-   * @throws MissingEnvVarError if the JWT secret is not set in the environment variables.
+   * @param data - The raw login data object to validate (typically from a request body).
+   * @returns The validated and typed login credentials.
+   * @throws ZodError if the data does not conform to the schema (invalid email or missing fields).
    */
-  async login(
-    data: unknown,
-    allowedRoles?: Role[],
-  ): Promise<{ token: string }> {
-    const validatedData = this.validateCredentials(data);
-    const user = await this.authenticateUser(
-      validatedData.email,
-      validatedData.password,
-      allowedRoles,
-    );
-    const token = this.generateToken(user.id, user.role);
-    return { token };
+  private validateCredentials(data: unknown): AuthCredentials {
+    return loginSchema.parse(data);
   }
 }

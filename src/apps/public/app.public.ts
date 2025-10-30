@@ -8,6 +8,11 @@ import { authorizationMiddleware } from "#common/middlewares/authorization.middl
 import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
 import { internalErrorMiddleware } from "#common/middlewares/internal-error.middleware.js";
 import { publicRoute } from "#common/middlewares/public-route.middleware.js";
+import { Product } from "#common/models/product.model.js";
+import {
+  onProductUpsert,
+  productMeiliService,
+} from "#common/services/search/product-meili.service.js";
 import { initI18n } from "#common/utils/i18n.js";
 import logger from "#common/utils/logger.js";
 import { initConnection } from "#config/database.js";

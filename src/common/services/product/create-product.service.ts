@@ -1,6 +1,7 @@
-import { Product } from "../../models/product.model.js";
 import { CreateProductPayload } from "#common/models/validation/product.validation.js";
 import mongoose from "mongoose";
+
+import { Product } from "../../models/product.model.js";
 
 export class CreateProductService {
   /**

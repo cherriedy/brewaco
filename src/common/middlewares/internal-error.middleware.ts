@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import logger from "../utils/logger.js";
+import { StatusCodes } from "http-status-codes";
+
 import { apiError } from "../utils/api-response.js";
 import { t } from "../utils/i18n.js";
-import { StatusCodes } from "http-status-codes";
+import logger from "../utils/logger.js";
 
 /**
  * Express error-handling middleware for internal server errors.

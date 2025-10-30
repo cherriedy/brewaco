@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { apiSuccess, apiError } from "../../utils/api-response.js";
+
+import { ValidateResetCodeService } from "../../services/auth/validate-reset-code.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
 import { t } from "../../utils/i18n.js";
 import logger from "../../utils/logger.js";
-import jwt from "jsonwebtoken";
-import { ValidateResetCodeService } from "../../services/auth/validate-reset-code.service.js";
 import { handleZodError } from "../../utils/zod-error-handler.js";
-import { StatusCodes } from "http-status-codes";
 
 const validateResetCodeService = new ValidateResetCodeService();
 
@@ -22,49 +23,46 @@ export const validateResetCode = async (
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       const validationErrors = handleZodError(error, locale);
-      return apiError(
+      apiError(
         res,
         t("auth.validationError", locale),
         validationErrors,
         StatusCodes.UNPROCESSABLE_ENTITY,
       );
+      return;
     }
 
     if (error instanceof jwt.TokenExpiredError) {
-      return apiError(
+      apiError(
         res,
         t("auth.tokenExpired", locale),
         null,
         StatusCodes.UNAUTHORIZED,
       );
+      return;
     }
 
     // Handle user not found error
     if (error instanceof Error && error.message === "USER_NOT_FOUND") {
-      return apiError(
+      apiError(
         res,
         t("auth.userNotFound", locale),
         null,
         StatusCodes.NOT_FOUND,
       );
+      return;
     }
 
     // Handle invalid code error
     if (error instanceof Error && error.message === "INVALID_CODE") {
-      return apiError(
-        res,
-        t("forgot-password.reset-code.invalidCode", locale),
-        null,
-      );
+      apiError(res, t("forgot-password.reset-code.invalidCode", locale), null);
+      return;
     }
 
     // Handle expired code error
     if (error instanceof Error && error.message === "EXPIRED_CODE") {
-      return apiError(
-        res,
-        t("forgot-password.reset-code.expiredCode", locale),
-        null,
-      );
+      apiError(res, t("forgot-password.reset-code.expiredCode", locale), null);
+      return;
     }
 
     if (error instanceof Error) {

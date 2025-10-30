@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { GetCategoriesService } from "#common/services/category/get-categories.service.js";
 import { apiSuccess } from "#common/utils/api-response.js";
 import { t } from "#common/utils/i18n.js";
-import { GetCategoriesService } from "#common/services/category/get-categories.service.js";
 import { pagingConfig } from "#config/app.js";
 import { Category as ICategory } from "#interfaces/category.interface.js";
+import { NextFunction, Request, Response } from "express";
 
 const getCategoriesService = new GetCategoriesService();
 

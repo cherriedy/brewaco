@@ -2,11 +2,11 @@ import slugify from "slugify";
 
 export function getSlug(text: string): string {
   return (slugify.default || slugify)(text, {
-    replacement: "-",
-    remove: undefined,
-    lower: true,
-    strict: true,
     locale: "vi",
+    lower: true,
+    remove: undefined,
+    replacement: "-",
+    strict: true,
     trim: true,
   });
 }

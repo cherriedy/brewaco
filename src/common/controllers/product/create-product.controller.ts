@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from "express";
-import { CreateProductService } from "../../services/product/create-product.service.js";
-import { apiSuccess, apiError } from "../../utils/api-response.js";
-import { t } from "../../utils/i18n.js";
-import { z } from "zod";
 import { createProductSchema } from "#common/models/validation/product.validation.js";
 import { handleZodError } from "#common/utils/zod-error-handler.js";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { z } from "zod";
+
+import { CreateProductService } from "../../services/product/create-product.service.js";
+import { apiError, apiSuccess } from "../../utils/api-response.js";
+import { t } from "../../utils/i18n.js";
 
 const createProductService = new CreateProductService();
 
@@ -36,27 +37,30 @@ export const createProduct = async (
     // Handle validation errors from Zod
     if (error instanceof z.ZodError) {
       const validationErrors = handleZodError(error, locale);
-      return apiError(res, t("validation", locale), validationErrors);
+      apiError(res, t("validation", locale), validationErrors);
+      return;
     }
 
     // Handle invalid category ID error
     if (error instanceof Error && error.message === "INVALID_CATEGORY_ID") {
-      return apiError(
+      apiError(
         res,
         t("category.invalidId", locale),
         null,
         StatusCodes.BAD_REQUEST,
       );
+      return;
     }
 
     // Handle duplicate product error
     if (error instanceof Error && error.message === "PRODUCT_ALREADY_EXISTS") {
-      return apiError(
+      apiError(
         res,
         t("product.alreadyExists", locale),
         null,
         StatusCodes.CONFLICT,
       );
+      return;
     }
 
     if (error instanceof Error) {

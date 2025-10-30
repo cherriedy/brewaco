@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+
 import { hasPermission, Method } from "../../config/rbac.js";
 import { apiError } from "../utils/api-response.js";
 import { t } from "../utils/i18n.js";
@@ -10,7 +11,10 @@ export function authorizationMiddleware(
   next: NextFunction,
 ) {
   // Skip authorization for public routes
-  if (req.isPublic === true) return next();
+  if (req.isPublic === true) {
+    next();
+    return;
+  }
 
   const path = req.path;
   const method = req.method as Method;
@@ -30,7 +34,8 @@ export function authorizationMiddleware(
       ? t("forbidden", req.locale)
       : t("notFound", req.locale);
 
-    return apiError(res, message, null, statusCode);
+    apiError(res, message, null, statusCode);
+    return;
   }
 
   next();

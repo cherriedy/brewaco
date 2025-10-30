@@ -1,4 +1,4 @@
-/* eslint-disable perfectionist/sort-interfaces,perfectionist/sort-objects */
+/* eslint-disable perfectionist/sort-objects */
 import { User as IUser } from "#interfaces/user.interface.js";
 import { model, Schema } from "mongoose";
 
