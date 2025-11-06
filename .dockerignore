@@ -1,8 +1,5 @@
 node_modules
 npm-debug.log
-dist
-.env
-.env.local
 .git
 .gitignore
 .prettierrc
@@ -10,11 +7,10 @@ dist
 .eslintrc
 .vscode
 .idea
-*.md
 !README.md
 coverage
 .nyc_output
-logs/*.log
+logs
 .DS_Store
 Thumbs.db
 

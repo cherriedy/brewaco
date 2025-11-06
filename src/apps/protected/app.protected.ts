@@ -43,7 +43,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/categories", protectedCategoryRoutes);
 app.use("/products", protectedProductRoutes);
-app.use("/contact", protectedContactRoutes);
+app.use("/contacts", protectedContactRoutes);
 
 // Error handling middleware - must be after all routes
 app.use(internalErrorMiddleware);

@@ -2,7 +2,18 @@
   "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./"
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "paths": {
+      "#apps/*": ["apps/*"],
+      "#core/*": ["core/*"],
+      "#utils/*": ["utils/*"],
+      "#common/*": ["common/*"],
+      "#config/*": ["config/*"],
+      "#interface/*": ["interface/*"],
+      "#errors/*": ["errors/*"],
+      "#type/*": ["type/*"],
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["dist"]

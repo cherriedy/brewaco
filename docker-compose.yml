@@ -1,125 +1,71 @@
-version: "3.8"
+version: '3.9'
 
 services:
-  # MongoDB Database
   mongodb:
-    image: mongo:7
+    image: mongo:6
     container_name: brewaco-mongodb
-    restart: unless-stopped
+    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-brewaco}
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+      MONGO_INITDB_DATABASE: "${MONGO_INITDB_DATABASE}"
+    volumes:
+      - ./mongo_data:/data/db
     ports:
       - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    networks:
-      - brewaco-network
 
-  # MeiliSearch
   meilisearch:
-    image: getmeili/meilisearch:v1.5
+    image: getmeili/meilisearch:v1.11
     container_name: brewaco-meilisearch
-    restart: unless-stopped
+    restart: always
     environment:
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
-      - MEILI_ENV=production
-      - MEILI_NO_ANALYTICS=true
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_ENV: "production"
+      MEILI_MASTER_KEY: "${MEILI_API_KEY}"
+    volumes:
+      - ./meili_data:/meili_data
     ports:
       - "7700:7700"
-    volumes:
-      - meilisearch_data:/meili_data
-    networks:
-      - brewaco-network
 
-  # Public API
-  public-api:
+  backend-public:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: brewaco-public-api
-    restart: unless-stopped
-    command: node dist/apps/public/app.public.js
-    environment:
-      - NODE_ENV=production
-      - PUBLIC_PORT=9001
-      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/${MONGO_INITDB_DATABASE:-brewaco}?authSource=admin
-      - JWT_SECRET=${JWT_SECRET}
-      - MAILERSEND_API_KEY=${MAILERSEND_API_KEY}
-      - MAILERSEND_FROM_EMAIL=${MAILERSEND_FROM_EMAIL}
-      - MAILERSEND_FROM_NAME=${MAILERSEND_FROM_NAME}
-      - MEILI_HOST=http://meilisearch:7700
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
-      - MEILI_INDEX_PRODUCTS=products
+      target: production
+    container_name: brewaco-backend-public
+    restart: always
+    depends_on:
+      - mongodb
+      - meilisearch
     ports:
       - "9001:9001"
-    depends_on:
-      - mongodb
-      - meilisearch
-    volumes:
-      - ./logs:/app/logs
-    networks:
-      - brewaco-network
+    command: ["npm", "run", "start:public"]
 
-  # Admin API
-  admin-api:
+  backend-admin:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: brewaco-admin-api
-    restart: unless-stopped
-    command: node dist/apps/protected/app.protected.js
-    environment:
-      - NODE_ENV=production
-      - PROTECTED_PORT=9002
-      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/${MONGO_INITDB_DATABASE:-brewaco}?authSource=admin
-      - JWT_SECRET=${JWT_SECRET}
-      - MAILERSEND_API_KEY=${MAILERSEND_API_KEY}
-      - MAILERSEND_FROM_EMAIL=${MAILERSEND_FROM_EMAIL}
-      - MAILERSEND_FROM_NAME=${MAILERSEND_FROM_NAME}
-      - MEILI_HOST=http://meilisearch:7700
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
-      - MEILI_INDEX_PRODUCTS=products
-    ports:
-      - "9002:9002"
+      target: production
+    container_name: brewaco-backend-admin
+    restart: always
     depends_on:
       - mongodb
       - meilisearch
-    volumes:
-      - ./logs:/app/logs
-    networks:
-      - brewaco-network
-
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: brewaco-nginx
-    restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.docker.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./ssl:/etc/nginx/ssl:ro # For SSL certificates
-      - nginx_logs:/var/log/nginx
-    depends_on:
-      - public-api
-      - admin-api
-    networks:
-      - brewaco-network
+      - "9002:9002"
+    command: ["npm", "run", "start:admin"]
 
-networks:
-  brewaco-network:
-    driver: bridge
+    # nginx:
+    #   image: nginx:latest
+    #   container_name: brewaco-nginx
+    #   restart: always
+    #   ports:
+    #     - "80:80"
+    #     - "443:443"
+    #   depends_on:
+    #     - backend-public
+    #     - backend-admin
+    #   volumes:
+    #     - ./nginx/conf.d:/etc/nginx/conf.d
+    #     - ./nginx/ssl:/etc/nginx/ssl
 
-volumes:
-  mongodb_data:
-    driver: local
-  mongodb_config:
-    driver: local
-  meilisearch_data:
-    driver: local
-  nginx_logs:
-    driver: local

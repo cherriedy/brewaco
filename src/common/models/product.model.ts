@@ -30,7 +30,7 @@ const productSchema = new Schema<IProduct>(
   { timestamps: true, versionKey: false }, // automatically adds createdAt & updatedAt
 );
 
-productSchema.index({ slug: 1 });
+// productSchema.index({ slug: 1 }); // ❌ duplicate
 productSchema.index({ categoryId: 1 });
 
 // Create compound index for common queries

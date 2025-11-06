@@ -1,0 +1,9 @@
+db.test.insertOne({ hello: "world" })
+use brewaco
+db.getUsers()
+use admin
+show dbs
+use brewaco
+db.system.users.find().pretty()
+use admin
+db.system.users.find().pretty()

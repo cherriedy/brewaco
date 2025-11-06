@@ -26,7 +26,7 @@ export const cartSchema = new Schema<ICart>(
   { timestamps: true, versionKey: false },
 );
 
-cartSchema.index({ userId: 1 });
+// cartSchema.index({ userId: 1 });
 cartSchema.index({ "items.productId": 1 });
 
 export const Cart = model<ICart>("Cart", cartSchema);
