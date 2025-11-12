@@ -22,7 +22,7 @@ RUN npm pkg delete scripts.prepare && npm ci --omit=dev
 
 # copy build output
 COPY --from=builder /app/dist ./dist
-COPY .env.production .env.production
+COPY .env .env
 
 # Expose cả 2 cổng backend
 EXPOSE 9001

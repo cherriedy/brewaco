@@ -1,18 +1,19 @@
+import { paymentCleanupJob } from "#apps/public/job/payment-cleanup.job.js";
 import authRoutes from "#apps/public/routes/auth.routes.js";
 import publicCartRoutes from "#apps/public/routes/cart.routes.js";
 import publicCategoryRoutes from "#apps/public/routes/category.routes.js";
 import publicContactRoutes from "#apps/public/routes/contact.routes.js";
+import publicOrderRoutes from "#apps/public/routes/order.routes.js";
+import publicPaymentRoutes from "#apps/public/routes/payment.routes.js";
 import publicProductRoutes from "#apps/public/routes/product.routes.js";
+import publicPromotionRoutes from "#apps/public/routes/promotion.routes.js";
+import publicReviewRoutes from "#apps/public/routes/review.routes.js";
 import { authenticationMiddleware } from "#common/middlewares/authentication.middleware.js";
 import { authorizationMiddleware } from "#common/middlewares/authorization.middleware.js";
 import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
 import { internalErrorMiddleware } from "#common/middlewares/internal-error.middleware.js";
 import { publicRoute } from "#common/middlewares/public-route.middleware.js";
-import { Product } from "#common/models/product.model.js";
-import {
-  onProductUpsert,
-  productMeiliService,
-} from "#common/services/search/product-meili.service.js";
+import docsRoutes from "#common/routes/docs.routes.js";
 import { initI18n } from "#common/utils/i18n.js";
 import logger from "#common/utils/logger.js";
 import { initConnection } from "#config/database.js";
@@ -29,12 +30,18 @@ const allowedOrigins = [/^https?:\/\/api\.domain\..*/];
 await initConnection();
 await initI18n();
 
+// Start payment cleanup job (runs every hour)
+paymentCleanupJob.start(1);
+
 // Middlewares
 app.use(express.json());
 app.use(cors({ origin: allowedOrigins }));
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(deviceContextMiddleware);
+
+// API Documentation
+app.use("/docs", publicRoute, docsRoutes);
 
 // Public routes
 app.get("/", publicRoute, (req: Request, res: Response) => {
@@ -45,12 +52,16 @@ app.use("/auth", publicRoute, authRoutes);
 app.use("/categories", publicRoute, publicCategoryRoutes);
 app.use("/products", publicRoute, publicProductRoutes);
 app.use("/contact", publicRoute, publicContactRoutes);
+app.use("/promotions", publicRoute, publicPromotionRoutes);
 
 app.use(authenticationMiddleware);
 app.use(authorizationMiddleware);
 
 // Protected routes
 app.use("/cart", publicCartRoutes);
+app.use("/payments", publicPaymentRoutes);
+app.use("/orders", publicOrderRoutes);
+app.use("/reviews", publicReviewRoutes);
 
 // Error handling middleware - must be after all routes
 app.use(internalErrorMiddleware);

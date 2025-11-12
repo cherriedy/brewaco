@@ -31,9 +31,19 @@ export const reviewConfig = {
     maxLength: 500, // Max length of comment
     minLength: 10, // Min length of comment
   },
+  delete: {
+    allowedPeriod: 24, // 24 hours
+  },
   rating: {
     maxValue: 5, // Max value of rating
     minValue: 1, // Min value of rating
+  },
+  status: {
+    // Allowed order statuses for leaving a review
+    allowed: ["PAID", "SHIPPED", "DELIVERED"],
+  },
+  update: {
+    allowedPeriod: 24, // 24 hours
   },
 };
 export const contactConfig = {
@@ -43,5 +53,24 @@ export const contactConfig = {
   },
   name: {
     minLength: 10, // Min length of name
+  },
+};
+export const promotionConfig = {
+  code: {
+    maxLength: 50,
+    minLength: 1,
+  },
+  discount: {
+    maxPercent: 100, // Maximum allowed percentage value when discountType is 'percent'
+    minValue: 0, // Minimum allowed discount value for any type
+  },
+  order: {
+    defaultMinOrderValue: 0, // Default minOrderValue used when creating promotions
+    minValue: 0, // Minimum order value used when validating promotions
+  },
+};
+export const paymentConfig = {
+  retry: {
+    period: 1, // 1 hour
   },
 };

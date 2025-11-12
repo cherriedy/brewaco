@@ -9,5 +9,5 @@ export interface Page<T> {
   page: number;
   pageSize: number;
   total: number;
-  totalPage: number;
+  totalPages: number;
 }

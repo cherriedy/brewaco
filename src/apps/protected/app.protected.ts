@@ -1,11 +1,14 @@
 import authRoutes from "#apps/protected/routes/auth.routes.js";
 import protectedCategoryRoutes from "#apps/protected/routes/category.routes.js";
 import protectedContactRoutes from "#apps/protected/routes/contact.routes.js";
+import protectedOrderRoutes from "#apps/protected/routes/order.routes.js";
 import protectedProductRoutes from "#apps/protected/routes/product.routes.js";
+import protectedPromotionRoutes from "#apps/protected/routes/promotion.routes.js";
 import { authenticationMiddleware } from "#common/middlewares/authentication.middleware.js";
 import { authorizationMiddleware } from "#common/middlewares/authorization.middleware.js";
 import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
 import { internalErrorMiddleware } from "#common/middlewares/internal-error.middleware.js";
+import docsRoutes from "#common/routes/docs.routes.js";
 import { initI18n } from "#common/utils/i18n.js";
 import logger from "#common/utils/logger.js";
 import { initConnection } from "#config/database.js";
@@ -29,6 +32,9 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(deviceContextMiddleware);
 
+// API Documentation
+app.use("/docs", docsRoutes);
+
 // Public auth routes (no authentication required)
 app.use("/auth", authRoutes);
 
@@ -43,7 +49,9 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/categories", protectedCategoryRoutes);
 app.use("/products", protectedProductRoutes);
-app.use("/contacts", protectedContactRoutes);
+app.use("/contact", protectedContactRoutes);
+app.use("/promotions", protectedPromotionRoutes);
+app.use("/orders", protectedOrderRoutes);
 
 // Error handling middleware - must be after all routes
 app.use(internalErrorMiddleware);

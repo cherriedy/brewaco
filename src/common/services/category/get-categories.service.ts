@@ -36,7 +36,7 @@ export class GetCategoriesService {
       page,
       pageSize,
       total,
-      totalPage,
+      totalPages: totalPage,
     } as Page<ICategory>;
   }
 }

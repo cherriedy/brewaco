@@ -58,7 +58,7 @@ export class GetProductsService {
       page,
       pageSize,
       total,
-      totalPage,
+      totalPages: totalPage,
     };
   }
 }

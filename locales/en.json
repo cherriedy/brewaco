@@ -12,6 +12,7 @@
   "invalidEmail": "Please provide a valid email address.",
   "invalidUserId": "There is an error, please log in again.",
   "emailRequired": "Email is required.",
+  "productIdRequired": "productId is required",
   "auth": {
     "userNotFound": "User with this email does not exist",
     "invalidEmail": "Please provide a valid email address.",
@@ -133,5 +134,127 @@
         "required": "Name is required."
       }
     }
+  },
+  "promotion": {
+    "list": {
+      "success": "Promotions retrieved successfully."
+    },
+    "get": {
+      "success": "Promotion retrieved successfully."
+    },
+    "create": {
+      "success": "Promotion created successfully."
+    },
+    "update": {
+      "success": "Promotion updated successfully."
+    },
+    "delete": {
+      "success": "Promotion deleted successfully."
+    },
+    "validate": {
+      "success": "Promotion code is valid."
+    },
+    "notFound": "Promotion not found or is not active.",
+    "invalidId": "The provided promotion ID is invalid.",
+    "alreadyExists": "A promotion with this code already exists.",
+    "invalidDateRange": "End date must be after start date.",
+    "invalidPercentageValue": "Percentage discount must be between 0 and 100.",
+    "notStarted": "This promotion has not started yet.",
+    "expired": "This promotion has expired.",
+    "orderValueTooLow": "Order value does not meet the minimum requirement for this promotion.",
+    "validation": {
+      "codeRequired": "Promotion code is required.",
+      "codeMaxLength": "Promotion code must not exceed 50 characters.",
+      "descriptionRequired": "Promotion description is required.",
+      "invalidDiscountType": "Discount type must be either 'percent' or 'fixed'.",
+      "discountValueMin": "Discount value must be greater than or equal to 0.",
+      "minOrderValueMin": "Minimum order value must be greater than or equal to 0.",
+      "orderValueMin": "Order value must be greater than or equal to 0."
+    }
+  },
+  "order": {
+    "create": {
+      "success": "Order created successfully."
+    },
+    "get": {
+      "success": "Orders retrieved successfully."
+    },
+    "update": {
+      "success": "Order updated successfully."
+    },
+    "cancel": {
+      "success": "Order cancelled successfully."
+    },
+    "notFound": "Order not found.",
+    "invalidProducts": "Some products in your order are invalid.",
+    "productNotFound": "One or more products in your order could not be found.",
+    "insufficientStock": "Insufficient stock for one or more products in your order.",
+    "cannotBeCancelled": "This order cannot be cancelled at its current status.",
+    "invalidStatusTransition": "Cannot change order status from current state to requested state.",
+    "validation": {
+      "productIdRequired": "Product ID is required.",
+      "productNameRequired": "Product name is required.",
+      "pricePositive": "Product price must be greater than or equal to 0.",
+      "quantityMinOne": "Product quantity must be at least 1.",
+      "streetRequired": "Street address is required.",
+      "cityRequired": "City is required.",
+      "zipRequired": "ZIP/Postal code is required.",
+      "countryRequired": "Country is required.",
+      "itemsRequired": "At least one item is required.",
+      "totalAmountPositive": "Total amount must be greater than or equal to 0.",
+      "invalidPaymentMethod": "Invalid payment method. Must be COD, VNPay, Momo, or Card.",
+      "invalidStatus": "Invalid order status."
+    }
+  },
+  "review": {
+    "list": {
+      "success": "Reviews retrieved successfully."
+    },
+    "create": {
+      "success": "Review created successfully."
+    },
+    "update": {
+      "success": "Review updated successfully."
+    },
+    "delete": {
+      "success": "Review deleted successfully."
+    },
+    "notFound": "Review not found.",
+    "invalidId": "The provided review ID is invalid.",
+    "alreadyExists": "You have already reviewed this product.",
+    "notOwned": "You do not have permission to update this review.",
+    "updatePeriodExpired": "The time period for updating this review has expired (24 hours).",
+    "deletePeriodExpired": "The time period for deleting this review has expired (24 hours).",
+    "validation": {
+      "minLength": "Review comment is too short.",
+      "maxLength": "Review comment is too long.",
+      "minValue": "Rating must be at least 1.",
+      "maxValue": "Rating must be at most 5.",
+      "buyerOnly": "Only buyers can submit a review for this product."
+    }
+  },
+  "payment": {
+    "create": {
+      "success": "Payment created successfully."
+    },
+    "get": {
+      "success": "Payment retrieved successfully."
+    },
+    "list": {
+      "success": "Payments retrieved successfully."
+    },
+    "success": "Payment completed successfully.",
+    "failed": "Payment failed. Please try again.",
+    "notFound": "Payment not found.",
+    "noPendingPayment": "No pending payment found for this order.",
+    "expired": "Payment time has expired. Order has been cancelled.",
+    "orderNotFound": "Order not found.",
+    "unauthorized": "You are not authorized to make payment for this order.",
+    "invalidOrderStatus": "Order is not in a valid state for payment.",
+    "gatewayNotSupported": "Payment gateway is not supported.",
+    "invalidCallback": "Invalid payment callback data."
+  },
+  "user": {
+    "invalidId": "The provided user ID is invalid."
   }
 }

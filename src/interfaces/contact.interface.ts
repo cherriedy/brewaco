@@ -1,4 +1,4 @@
-import { ContactState } from "#types/contact-state.js";
+import { ContactState } from "#types/contact.js";
 
 export interface Contact {
   createdAt?: Date;

@@ -37,7 +37,7 @@ export class GetContactsService {
       page,
       pageSize,
       total,
-      totalPage,
+      totalPages: totalPage,
     };
   }
 }

@@ -56,7 +56,8 @@ export const getProducts = async (
           sortBy,
           sortOrder === 1 ? "asc" : "desc",
         );
-        apiSuccess(res, result, t("product.list.success", req.locale)); return;
+        apiSuccess(res, result, t("product.list.success", req.locale));
+        return;
       } catch (searchError) {
         // If MeiliSearch fails, log and fall back to DB listing
         logger.error(

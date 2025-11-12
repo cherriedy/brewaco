@@ -30,7 +30,6 @@ const productSchema = new Schema<IProduct>(
   { timestamps: true, versionKey: false }, // automatically adds createdAt & updatedAt
 );
 
-// productSchema.index({ slug: 1 }); // ❌ duplicate
 productSchema.index({ categoryId: 1 });
 
 // Create compound index for common queries
@@ -46,12 +45,16 @@ productSchema.pre("validate", function (next) {
 
 // After saving a product, update the MeiliSearch index asynchronously
 productSchema.post("save", async function (doc, next) {
-  onProductUpsert(doc).then(() => { next(); });
+  onProductUpsert(doc).then(() => {
+    next();
+  });
 });
 
 // After deleting a product, remove it from the MeiliSearch index asynchronously
 productSchema.post("findOneAndDelete", async function (doc, next) {
-  onProductDelete(doc._id.toString()).then(() => { next(); });
+  onProductDelete(doc._id.toString()).then(() => {
+    next();
+  });
 });
 
 export const Product = model<IProduct>("Product", productSchema);
