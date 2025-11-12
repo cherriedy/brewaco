@@ -11,7 +11,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Environment files (use platform env vars)
-.env.production
+.env
 .env.*
 !.env.example
 
@@ -42,7 +42,7 @@ docs/
 
 # Docker files (not needed in container)
 docker-compose*.yml
-Dockerfile*
+Dockerfile
 .dockerignore
 
 # CI/CD

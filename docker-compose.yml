@@ -1,71 +1,93 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:6
-    container_name: brewaco-mongodb
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
-      MONGO_INITDB_DATABASE: "${MONGO_INITDB_DATABASE}"
-    volumes:
-      - ./mongo_data:/data/db
-    ports:
-      - "27017:27017"
-
-  meilisearch:
-    image: getmeili/meilisearch:v1.11
-    container_name: brewaco-meilisearch
-    restart: always
-    environment:
-      MEILI_NO_ANALYTICS: "true"
-      MEILI_ENV: "production"
-      MEILI_MASTER_KEY: "${MEILI_API_KEY}"
-    volumes:
-      - ./meili_data:/meili_data
-    ports:
-      - "7700:7700"
-
-  backend-public:
+  public-api:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
-    container_name: brewaco-backend-public
-    restart: always
-    depends_on:
-      - mongodb
-      - meilisearch
+    container_name: brewaco-public-api
+    restart: unless-stopped
+    command: [ "node", "dist/apps/public/app.public.js" ]
     ports:
       - "9001:9001"
-    command: [ "npm", "run", "start:public" ]
+    environment:
+      - NODE_ENV=production
+      - MEILI_HOST=http://meilisearch:7700
+      - PUBLIC_PORT=9001
+    env_file:
+      - .env
+    depends_on:
+      - meilisearch
+    networks:
+      - brewaco-network
 
-  backend-admin:
+  admin-api:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
-    container_name: brewaco-backend-admin
-    restart: always
-    depends_on:
-      - mongodb
-      - meilisearch
+    container_name: brewaco-admin-api
+    restart: unless-stopped
+    command: [ "node", "dist/apps/protected/app.protected.js" ]
     ports:
       - "9002:9002"
-    command: [ "npm", "run", "start:admin" ]
+    environment:
+      - NODE_ENV=production
+      - MEILI_HOST=http://meilisearch:7700
+      - PROTECTED_PORT=9002
+    env_file:
+      - .env
+    depends_on:
+      - meilisearch
+    networks:
+      - brewaco-network
 
-    nginx:
-      image: nginx:latest
-      container_name: brewaco-nginx
-      restart: always
-      ports:
-        - "80:80"
-#        - "443:443"
-      depends_on:
-        - backend-public
-        - backend-admin
-      volumes:
-        - ./nginx/conf.d:/etc/nginx/conf.d
-#        - ./nginx/ssl:/etc/nginx/ssl
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx-proxy
+    container_name: brewaco-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - public-api
+      - admin-api
+    networks:
+      - brewaco-network
 
+  # Uncomment if want to run MongoDB locally in Docker
+  # mongodb:
+  #   image: mongo:7
+  #   container_name: brewaco-mongodb
+  #   restart: unless-stopped
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-admin}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   networks:
+  #     - brewaco-network
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: brewaco-meilisearch
+    restart: unless-stopped
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-masterKey}
+      MEILI_ENV: production
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - brewaco-network
+
+networks:
+  brewaco-network:
+    driver: bridge
+
+volumes:
+  # mongodb_data:  # Commented: using external MongoDB provider
+  meilisearch_data:

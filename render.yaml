@@ -4,7 +4,7 @@ services:
   - type: web
     name: brewaco
     env: docker
-    dockerfilePath: ./Dockerfile.nginx
+    dockerfilePath: ./Dockerfile
     region: oregon
     plan: starter
     envVars:
