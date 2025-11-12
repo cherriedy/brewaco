@@ -1,0 +1,22 @@
+# Render.com Configuration
+
+services:
+  - type: web
+    name: brewaco
+    env: docker
+    dockerfilePath: ./Dockerfile.nginx
+    region: oregon
+    plan: starter
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: MEILI_HOST
+        sync: false
+      - key: MEILI_MASTER_KEY
+        sync: false

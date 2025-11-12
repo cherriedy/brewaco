@@ -9,12 +9,16 @@ COPY src ./src
 COPY locales ./locales
 RUN npm run build
 
-# Stage 2: Production runtime
+# Stage 2: Production with Nginx
 FROM node:20-alpine AS production
 WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Install Nginx
+RUN apk add --no-cache nginx
+
+# Install Node.js dependencies
 COPY package*.json ./
 RUN npm pkg delete scripts.prepare && npm ci --omit=dev
 
@@ -22,10 +26,14 @@ RUN npm pkg delete scripts.prepare && npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/locales ./locales
 
-# COPY .env.production .env.production
+# Copy Nginx configuration
+COPY nginx.conf /etc/nginx/http.d/default.conf
 
-EXPOSE 9001 9002
+# Create directories for Nginx
+RUN mkdir -p /run/nginx
 
-# Default command runs both services
-CMD ["sh", "-c", "node dist/apps/public/app.public.js & node dist/apps/protected/app.protected.js & wait"]
+EXPOSE 80
+
+# Start both Node.js apps and Nginx
+CMD ["sh", "-c", "node dist/apps/public/app.public.js & node dist/apps/protected/app.protected.js & nginx -g 'daemon off;'"]
 

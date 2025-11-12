@@ -12,7 +12,9 @@
       "#config/*": ["config/*"],
       "#interface/*": ["interface/*"],
       "#errors/*": ["errors/*"],
+      "#gateway/*": ["gateway/*"],
       "#type/*": ["type/*"],
+      "#types/*": ["types/*"]
     }
   },
   "include": ["src/**/*.ts"],

@@ -39,7 +39,7 @@ services:
       - meilisearch
     ports:
       - "9001:9001"
-    command: ["npm", "run", "start:public"]
+    command: [ "npm", "run", "start:public" ]
 
   backend-admin:
     build:
@@ -53,19 +53,19 @@ services:
       - meilisearch
     ports:
       - "9002:9002"
-    command: ["npm", "run", "start:admin"]
+    command: [ "npm", "run", "start:admin" ]
 
-    # nginx:
-    #   image: nginx:latest
-    #   container_name: brewaco-nginx
-    #   restart: always
-    #   ports:
-    #     - "80:80"
-    #     - "443:443"
-    #   depends_on:
-    #     - backend-public
-    #     - backend-admin
-    #   volumes:
-    #     - ./nginx/conf.d:/etc/nginx/conf.d
-    #     - ./nginx/ssl:/etc/nginx/ssl
+    nginx:
+      image: nginx:latest
+      container_name: brewaco-nginx
+      restart: always
+      ports:
+        - "80:80"
+#        - "443:443"
+      depends_on:
+        - backend-public
+        - backend-admin
+      volumes:
+        - ./nginx/conf.d:/etc/nginx/conf.d
+#        - ./nginx/ssl:/etc/nginx/ssl
 
