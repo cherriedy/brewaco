@@ -8,19 +8,27 @@ import {
 
 /**Schema for validating user registration data. Includes strict password requirements for security.*/
 const registerSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+  name: z.string().min(1, { message: "registration.emptyName" }),
+  phone: z.string().optional(),
   address: z
     .object({
-      city: z.string().optional(),
-      country: z.string().optional(),
-      state: z.string().optional(),
-      street: z.string().optional(),
-      zip: z.string().optional(),
+      province: z.object({
+        code: z.string().optional(),
+        name: z.string().optional(),
+      }).optional(),
+      district: z.object({
+        code: z.string().optional(),
+        name: z.string().optional(),
+      }).optional(),
+      ward: z.object({
+        code: z.string().optional(),
+        name: z.string().optional(),
+      }).optional(),
+      detail: z.string().optional(),
     })
     .optional(),
-  email: emailSchema,
-  name: z.string().min(1, { message: "registration.emptyName" }),
-  password: passwordSchema,
-  phone: z.string().optional(),
 });
 
 export type Registration = z.infer<typeof registerSchema>;

@@ -1,4 +1,3 @@
-import { paymentCleanupJob } from "#apps/public/job/payment-cleanup.job.js";
 import authRoutes from "#apps/public/routes/auth.routes.js";
 import publicCartRoutes from "#apps/public/routes/cart.routes.js";
 import publicCategoryRoutes from "#apps/public/routes/category.routes.js";
@@ -8,6 +7,9 @@ import publicPaymentRoutes from "#apps/public/routes/payment.routes.js";
 import publicProductRoutes from "#apps/public/routes/product.routes.js";
 import publicPromotionRoutes from "#apps/public/routes/promotion.routes.js";
 import publicReviewRoutes from "#apps/public/routes/review.routes.js";
+import publicUserRoutes from "#apps/public/routes/user.routes.js";
+import publicReviewsByProductRoutes from "#apps/public/routes/reviews-by-product.js";
+import publicPaymentCallbackRoutes from "#apps/public/routes/payment-callback.routes.js";
 import { authenticationMiddleware } from "#common/middlewares/authentication.middleware.js";
 import { authorizationMiddleware } from "#common/middlewares/authorization.middleware.js";
 import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
@@ -24,17 +26,15 @@ import morgan from "morgan";
 
 const app = express();
 const port = process.env.PUBLIC_PORT ?? "9001";
-const allowedOrigins = [/^https?:\/\/api\.domain\..*/];
+const allowedOrigins = ["http://localhost:3000"];
 
 // Initialize database and i18n
 await initConnection();
 await initI18n();
 
-// Start payment cleanup job (runs every hour)
-paymentCleanupJob.start(1);
-
 // Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: allowedOrigins }));
 app.use(helmet());
 app.use(morgan("dev"));
@@ -53,13 +53,16 @@ app.use("/categories", publicRoute, publicCategoryRoutes);
 app.use("/products", publicRoute, publicProductRoutes);
 app.use("/contact", publicRoute, publicContactRoutes);
 app.use("/promotions", publicRoute, publicPromotionRoutes);
+app.use("/payment-callback", publicPaymentCallbackRoutes);
+app.use("/reviews-by-product", publicReviewsByProductRoutes);
 
 app.use(authenticationMiddleware);
 app.use(authorizationMiddleware);
 
 // Protected routes
+app.use("/users", publicUserRoutes);
 app.use("/cart", publicCartRoutes);
-app.use("/payments", publicPaymentRoutes);
+app.use("/payment", publicPaymentRoutes);
 app.use("/orders", publicOrderRoutes);
 app.use("/reviews", publicReviewRoutes);
 

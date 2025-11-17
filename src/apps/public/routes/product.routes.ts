@@ -1,4 +1,5 @@
 import { getProduct } from "#common/controllers/product/get-product.controller.js";
+import { getProductsByCategory } from "#common/controllers/product/get-products-by-category.controller.js";
 import { getProducts } from "#common/controllers/product/get-products.controller.js";
 import { Router } from "express";
 
@@ -60,7 +61,8 @@ const router = Router();
  *                       type: object
  */
 router.get("/", getProducts);
-
+// /products/category/:id?q=
+router.get("/category/:id", getProductsByCategory);
 /**
  * @swagger
  * /products/{id}:

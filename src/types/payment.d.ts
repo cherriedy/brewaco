@@ -1,2 +1,2 @@
-export type PaymentMethod = "COD" | "VNPay";
-export type PaymentStatus = "FAILED" | "PENDING" | "REFUNDED" | "SUCCESS";
+export type PaymentMethod = "COD" | "VNPAY" | "MOMO";
+export type PaymentStatus = "PENDING" | "PAID" | "FAILD"

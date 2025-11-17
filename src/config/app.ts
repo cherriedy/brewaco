@@ -38,9 +38,13 @@ export const reviewConfig = {
     maxValue: 5, // Max value of rating
     minValue: 1, // Min value of rating
   },
-  status: {
+  orderStatus: {
     // Allowed order statuses for leaving a review
-    allowed: ["PAID", "SHIPPED", "DELIVERED"],
+    allowed: ["DELIVERED"],
+  },
+  paymentStatus: {
+    // Allowed payment statuses for leaving a review
+    allowed: ["PAID"],
   },
   update: {
     allowedPeriod: 24, // 24 hours

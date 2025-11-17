@@ -27,9 +27,9 @@ export class GetCartItemsService {
     const _userId = new Types.ObjectId(userId);
 
     // Query the database for the user's cart
-    let cart = await Cart.findById(_userId).populate(
+    let cart = await Cart.findOne({ userId: _userId }).populate(
       "items.productId",
-      "name price images stock",
+      "name price images stock discount",
     );
     if (!cart) {
       cart = new Cart({ items: [], userId: _userId });

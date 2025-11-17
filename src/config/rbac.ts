@@ -8,6 +8,9 @@ export type Resource =
   | "contact"
   | "products"
   | "reviews"
+  | "promotions"
+  | "orders"
+  | "payment"
   | "users";
 export type Resources = Record<Resource, Permission[]>;
 
@@ -25,24 +28,34 @@ const RESOURCE_MAPPING: Record<string, Resource> = {
   "^/contact.*": "contact",
   "^/products.*": "products",
   "^/users/.*": "users",
+  "^/reviews.*": "reviews",
+  "^/promotions.*": "promotions",
+  "^/orders.*": "orders",
+  "^/payment.*": "payment",
 };
 
 const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
   admin: {
+    promotions: ["read", "write", "update", "delete"],
     cart: ["read", "write", "update", "delete"],
+    orders: ["read", "write", "update", "delete"],
     categories: ["read", "write", "update", "delete"],
     contact: ["read"],
     products: ["read", "write", "update", "delete"],
     reviews: ["read"],
     users: ["read", "write", "update", "delete"],
+    payment: ["write"],
   },
   customer: {
-    cart: ["read", "write", "update"],
+    promotions: ["read"],
+    cart: ["read", "write", "update", "delete"],
+    orders: ["read", "write", "update"],
     categories: ["read"],
     contact: [],
     products: ["read"],
-    reviews: ["read", "write"],
+    reviews: ["read", "write", "update"],
     users: ["read", "update"],
+    payment: ["write"],
   },
 };
 

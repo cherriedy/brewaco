@@ -63,7 +63,7 @@ export class ResetPasswordService {
     newPassword: string,
   ): Promise<void> {
     const user = await this.findUserByEmail(email);
-    user.password = await hashPassword(newPassword);
+    user.password = newPassword;
     user.resetCode = undefined;
     user.resetCodeExp = undefined;
     await user.save();

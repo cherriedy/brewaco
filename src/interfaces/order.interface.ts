@@ -1,21 +1,29 @@
-import { Address } from "#interfaces/address.interface.js";
 import { OrderStatus } from "#types/order.js";
-import { PaymentMethod } from "#types/payment.js";
+import { PaymentMethod, PaymentStatus } from "#types/payment.js";
 import { Types } from "mongoose";
 
 export interface Order {
   _id?: Types.ObjectId;
-  createdAt?: Date;
-  discountAmount?: number;
-  items: OrderItem[];
-  notes?: string;
-  paymentMethod: PaymentMethod;
-  promotionCode?: string;
-  shippingAddress: ShippingAddress;
-  status: OrderStatus;
-  totalAmount: number;
-  updatedAt?: Date;
   userId: Types.ObjectId;
+  items: OrderItem[];
+  totalAmount: number;
+  paymentMethod: PaymentMethod;
+  paymentStatus?: PaymentStatus;
+  orderStatus?: OrderStatus;
+  paidTimestamp?: Date;
+  failedTimestamp?: Date;
+  confirmedTimestamp?: Date;
+  shippingTimestamp?: Date;
+  deliveredTimestamp?: Date;
+  cancelledTimestamp?: Date;
+
+  shippingAddress: ShippingAddress;
+  promotionCode?: string;
+  discountAmount?: number;
+  note?: string;
+  isReviewed?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface OrderItem {
@@ -23,9 +31,15 @@ export interface OrderItem {
   price: number;
   productId: Types.ObjectId;
   quantity: number;
+  images?: string[];
+  isReviewed?: boolean;
 }
 
-export interface ShippingAddress extends Address {
+export interface ShippingAddress {
+  province?: string;
+  district?: string;
+  ward?: string;
+  detail?: string;
   phone?: string;
   recipientName?: string;
 }

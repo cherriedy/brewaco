@@ -1,41 +1,45 @@
 import { UpdateOrderStatusPayload } from "#common/models/validation/order.validation.js";
 import { Types } from "mongoose";
-
 import { Order } from "../../models/order.model.js";
 
 export class UpdateOrderStatusService {
   // Validate status transitions
   private validTransitions: Record<string, string[]> = {
-    CANCELED: [],
-    CREATED: ["PAID", "CANCELED"],
+    PENDING: ["CONFIRM", "CANCELLED"],
+    CONFIRM: ["SHIPPING", "CANCELLED"],
+    SHIPPING: ["DELIVERED", "CANCELLED"],
     DELIVERED: [],
-    PAID: ["SHIPPED", "CANCELED"],
-    SHIPPED: ["DELIVERED", "CANCELED"],
+    CANCELLED: [],
   };
 
-  /**
-   * Updates the status of an order.
-   *
-   * @param orderId - The ID of the order.
-   * @param data - The status update payload.
-   * @returns Promise<Order> - The updated order.
-   * @throws Error if order not found or invalid status transition.
-   */
+  // Map orderStatus => timestamp field
+  private statusTimestamps: Record<string, keyof typeof Order.schema.paths> = {
+    CONFIRM: "confirmedTimestamp",
+    SHIPPING: "shippingTimestamp",
+    DELIVERED: "deliveredTimestamp",
+    CANCELLED: "cancelledTimestamp",
+  };
+
   async updateOrderStatus(orderId: string, data: UpdateOrderStatusPayload) {
     const order = await Order.findById(new Types.ObjectId(orderId));
+    if (!order) throw new Error("ORDER_NOT_FOUND");
 
-    if (!order) {
-      throw new Error("ORDER_NOT_FOUND");
+    if (!order.orderStatus) {
+      throw new Error("ORDER_INVALID_STATUS");
     }
 
-    const allowedStatuses = this.validTransitions[order.status];
-    if (!allowedStatuses.includes(data.status)) {
-      throw new Error("ORDER_INVALID_STATUS_TRANSITION");
+    const allowed = this.validTransitions[order.orderStatus];
+    if (!allowed.includes(data.orderStatus)) throw new Error("ORDER_INVALID_STATUS_TRANSITION");
+
+    order.orderStatus = data.orderStatus;
+
+    // Cập nhật timestamp tương ứng
+    const timestampField = this.statusTimestamps[data.orderStatus];
+    if (timestampField) {
+      order.set(timestampField  as string, new Date());
     }
 
-    order.status = data.status;
     await order.save();
-
     return order;
   }
 }

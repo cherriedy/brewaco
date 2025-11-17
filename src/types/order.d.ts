@@ -1,6 +1,1 @@
-export type OrderStatus =
-  | "CANCELED"
-  | "CREATED"
-  | "DELIVERED"
-  | "PAID"
-  | "SHIPPED";
+export type OrderStatus = "PENDING" | "CONFIRM" | "SHIPPING" | "DELIVERED" | "CANCELLED"

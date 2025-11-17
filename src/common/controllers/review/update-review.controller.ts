@@ -1,5 +1,4 @@
 import {
-  createReviewSchema,
   updateReviewSchema,
 } from "#common/models/validation/review.validation.js";
 import { UpdateReviewService } from "#common/services/review/update-review.service.js";

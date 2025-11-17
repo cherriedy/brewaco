@@ -185,6 +185,7 @@ export abstract class BaseMeiliService<T extends Record<string, any>>
     pageSize = 20,
     sortBy?: string,
     sortOrder: "asc" | "desc" = "desc",
+    options?: { filters?: string }
   ) {
     await this.ensureIndex();
     const offset = page * pageSize;
@@ -199,7 +200,9 @@ export abstract class BaseMeiliService<T extends Record<string, any>>
       // MeiliSearch expects "field:order" format
       searchParams.sort = [`${sortBy}:${sortOrder}`];
     }
-
+    if (options?.filters) {
+      searchParams.filter = options.filters;
+    }
     const result = await this.index.search(q, searchParams);
 
     const total = result.estimatedTotalHits ?? 0;

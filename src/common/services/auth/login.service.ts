@@ -32,7 +32,7 @@ export class LoginService {
   async login(
     data: unknown,
     allowedRoles?: Role[],
-  ): Promise<{ token: string }> {
+  ): Promise<{ token: string}> {
     const validatedData = this.validateCredentials(data);
     const user = await this.authenticateUser(
       validatedData.email,

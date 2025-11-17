@@ -6,67 +6,59 @@ import { Order } from "../../models/order.model.js";
 import { Product } from "../../models/product.model.js";
 
 export class CreateOrderService {
-  /**
-   * Creates a new order for a user.
-   *
-   * @param userId - The ID of the user creating the order.
-   * @param data - The order creation payload.
-   * @returns Promise<Order> - The created order.
-   * @throws Error if validation fails or products are unavailable.
-   */
   async invoke(userId: string, data: CreateOrderPayload) {
-    // Validate product availability and stock
-    const productIds = data.items.map((item) => item.productId);
+    const productIds = data.items.map((i) => i.productId);
+
+    // Fetch products
     const products = await Product.find({ _id: { $in: productIds } });
 
     if (products.length !== productIds.length) {
       throw new Error("ORDER_INVALID_PRODUCTS");
     }
 
-    // Check stock availability
+    // Check stock
     for (const item of data.items) {
       const product = products.find(
-        (p) => p._id?.toString() === item.productId,
+        (p) => p._id.toString() === item.productId
       );
-      if (!product) {
-        throw new Error("ORDER_PRODUCT_NOT_FOUND");
-      }
-      if (product.stock < item.quantity) {
-        throw new Error("ORDER_INSUFFICIENT_STOCK");
-      }
+      if (!product) throw new Error("ORDER_PRODUCT_NOT_FOUND");
+      if (product.stock < item.quantity) throw new Error("ORDER_INSUFFICIENT_STOCK");
     }
 
-    // Create the order
+    // Create order
     const order = new Order({
+      userId: new Types.ObjectId(userId),
       items: data.items.map((item) => ({
+        productId: new Types.ObjectId(item.productId),
         name: item.name,
         price: item.price,
-        productId: new Types.ObjectId(item.productId),
         quantity: item.quantity,
+        images: item.images || [],
       })),
-      notes: data.notes,
-      paymentMethod: data.paymentMethod,
-      promotionCode: data.promotionCode,
-      shippingAddress: data.shippingAddress,
-      status: "CREATED",
       totalAmount: data.totalAmount,
-      userId: new Types.ObjectId(userId),
+      paymentMethod: data.paymentMethod,
+      paymentStatus: "PENDING",
+      orderStatus: "PENDING",
+      shippingAddress: data.shippingAddress,
+      promotionCode: data.promotionCode || "",
+      discountAmount: data.discountAmount || 0,
+      note: data.note || "",
     });
 
     await order.save();
 
-    // Update product stock
+    // Update stock
     for (const item of data.items) {
       await Product.findByIdAndUpdate(item.productId, {
         $inc: { stock: -item.quantity },
       });
     }
 
-    // Clear user's cart after successful order, only remove the items that were ordered from the cart
-    const productObjectIds = productIds.map((id) => new Types.ObjectId(id));
+    // Remove ordered items from user's cart
+    const objectIds = productIds.map((id) => new Types.ObjectId(id));
     await Cart.findOneAndUpdate(
       { userId: new Types.ObjectId(userId) },
-      { $pull: { items: { productId: { $in: productObjectIds } } } },
+      { $pull: { items: { productId: { $in: objectIds } } } }
     );
 
     return order;

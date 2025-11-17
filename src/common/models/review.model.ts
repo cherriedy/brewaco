@@ -9,21 +9,28 @@ export const reviewSchema = new Schema<IReview>(
       required: true,
       type: Schema.Types.ObjectId,
     },
-    rating: { max: 5, min: 1, type: Number },
+    rating: { max: 5, min: 1, type: Number, required: true },
     userId: {
       ref: "User",
       required: true,
       type: Schema.Types.ObjectId,
     },
+    orderId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Order',
+      required: true,
+    },
   },
-  { timestamps: { createdAt: true, updatedAt: false } },
+  { timestamps: true, versionKey: false }, // automatically adds createdAt & updatedAt
 );
 
 reviewSchema.index({ rating: -1 });
 reviewSchema.index({ productId: 1, userId: 1 }, { unique: true });
 
 reviewSchema.pre("save", function (next) {
-  this.comment = this.comment.trim();
+  if (this.comment) {
+    this.comment = this.comment.trim();
+  }
   next();
 });
 

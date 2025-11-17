@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-
 import { Order } from "../../models/order.model.js";
 import { Product } from "../../models/product.model.js";
 
@@ -22,19 +21,23 @@ export class CancelOrderService {
       throw new Error("ORDER_NOT_FOUND");
     }
 
-    // Only allow cancellation for pending or paid orders
-    if (!["CREATED", "PAID"].includes(order.status)) {
+    // đảm bảo orderStatus luôn có giá trị
+    const currentStatus = order.orderStatus || "PENDING";
+
+    // Chỉ cho phép hủy khi trạng thái là PENDING hoặc CONFIRM
+    if (!["PENDING", "CONFIRM"].includes(currentStatus)) {
       throw new Error("ORDER_CANNOT_BE_CANCELLED");
     }
 
-    // Restore product stock
+    // Khôi phục số lượng sản phẩm
     for (const item of order.items) {
       await Product.findByIdAndUpdate(item.productId, {
         $inc: { stock: item.quantity },
       });
     }
 
-    order.status = "CANCELED";
+    order.orderStatus = "CANCELLED";
+    order.cancelledTimestamp = new Date(); 
     await order.save();
 
     return order;

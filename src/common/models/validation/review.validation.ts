@@ -4,19 +4,20 @@ import { z } from "zod";
 export const createReviewSchema = z.object({
   comment: z
     .string()
-    .min(reviewConfig.comment.minLength, "review.validation.minLength")
-    .max(reviewConfig.comment.maxLength, "review.validation.maxLength"),
+    .max(reviewConfig.comment.maxLength, "review.validation.maxLength")
+    .optional(),
   rating: z
     .number()
     .int()
     .min(reviewConfig.rating.minValue, "review.validation.minValue")
     .max(reviewConfig.rating.maxValue, "review.validation.maxValue"),
+  productId: z.string().nonempty("review.validation.productIdRequired"),
+  orderId: z.string().nonempty("review.validation.orderIdRequired"),
 });
 
 export const updateReviewSchema = z.object({
   comment: z
     .string()
-    .min(reviewConfig.comment.minLength, "review.validation.minLength")
     .max(reviewConfig.comment.maxLength, "review.validation.maxLength")
     .optional(),
   rating: z

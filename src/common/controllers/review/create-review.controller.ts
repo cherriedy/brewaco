@@ -32,64 +32,32 @@ export const createReview = async (
   const locale = req.locale;
   try {
     const userId = req.user!.id;
-    const productId = req.query.productId as string;
-
-    if (!productId) {
-      apiError(
-        res,
-        t("productIdRequired", locale),
-        null,
-        StatusCodes.BAD_REQUEST,
-      );
-      return;
-    }
+    const productId = req.body.productId as string;
+    const orderId = req.body.orderId as string;
 
     const validated = createReviewSchema.parse(req.body);
     const review = await createReviewService.createReview(
       userId,
       productId,
-      validated,
+      orderId,
+      validated
     );
 
     apiSuccess(res, review, t("review.create.success", locale));
   } catch (error: unknown) {
-    // Handle validation errors from Zod
     if (error instanceof ZodError) {
       const validationErrors = handleZodError(error, locale);
-      apiError(
-        res,
-        t("validation", locale),
-        validationErrors,
-        StatusCodes.BAD_REQUEST,
-      );
+      apiError(res, t("validation", locale), validationErrors, StatusCodes.BAD_REQUEST);
       return;
     }
 
-    // Handle invalid product ID error
-    if (error instanceof Error && error.message === "INVALID_PRODUCT_ID") {
-      apiError(
-        res,
-        t("product.invalidId", locale),
-        null,
-        StatusCodes.BAD_REQUEST,
-      );
-      return;
-    }
-
-    // Handle product not found error
     if (error instanceof Error && error.message === "PRODUCT_NOT_FOUND") {
       apiError(res, t("product.notFound", locale), null, StatusCodes.NOT_FOUND);
       return;
     }
 
-    // Handle duplicate review error
     if (error instanceof Error && error.message === "REVIEW_ALREADY_EXISTS") {
-      apiError(
-        res,
-        t("review.alreadyExists", locale),
-        null,
-        StatusCodes.CONFLICT,
-      );
+      apiError(res, t("review.alreadyExists", locale), null, StatusCodes.CONFLICT);
       return;
     }
 

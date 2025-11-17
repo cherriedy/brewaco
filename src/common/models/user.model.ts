@@ -12,11 +12,19 @@ const userSchema = new Schema<IUser>(
     phone: String,
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
     address: {
-      street: String,
-      city: String,
-      state: String,
-      zip: String,
-      country: String,
+      province: {
+        code: String, // Mã tỉnh
+        name: String, // Tên tỉnh
+      },
+      district: {
+        code: String, // Mã quận
+        name: String, // Tên quận
+      },
+      ward: {
+        code: String, // Mã phường
+        name: String, // Tên phường
+      },
+      detail: String, // Số nhà, tên đường
     },
     resetToken: String,
     resetTokenExp: Date,

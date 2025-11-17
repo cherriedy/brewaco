@@ -11,37 +11,39 @@ const createOrderService = new CreateOrderService();
 export const createOrder = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const locale = req.locale;
   try {
+    // Validate input
     const validated = createOrderSchema.parse(req.body);
-    const result = await createOrderService.invoke(
-      req.user!.id,
-      validated,
-    );
+
+    // Invoke service
+    const order = await createOrderService.invoke(req.user!.id, validated);
+
     res.status(201);
-    apiSuccess(res, result, t("order.create.success", locale));
+    apiSuccess(res, order, t("order.create.success", locale));
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       const validationErrors = handleZodError(error, locale);
       apiError(res, t("validation", locale), validationErrors);
       return;
     }
+
     if (error instanceof Error) {
-      if (error.message === "ORDER_INVALID_PRODUCTS") {
-        apiError(res, t("order.invalidProducts", locale), null);
-        return;
-      }
-      if (error.message === "ORDER_PRODUCT_NOT_FOUND") {
-        apiError(res, t("order.productNotFound", locale), null);
-        return;
-      }
-      if (error.message === "ORDER_INSUFFICIENT_STOCK") {
-        apiError(res, t("order.insufficientStock", locale), null);
-        return;
+      switch (error.message) {
+        case "ORDER_INVALID_PRODUCTS":
+          apiError(res, t("order.invalidProducts", locale), null);
+          return;
+        case "ORDER_PRODUCT_NOT_FOUND":
+          apiError(res, t("order.productNotFound", locale), null);
+          return;
+        case "ORDER_INSUFFICIENT_STOCK":
+          apiError(res, t("order.insufficientStock", locale), null);
+          return;
       }
     }
+
     next(error);
   }
 };

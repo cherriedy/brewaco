@@ -26,6 +26,10 @@ export class GetPromotionsService {
       filter.active = active;
     }
 
+    // Thêm điều kiện kiểm tra còn hạn
+    const now = new Date();
+    filter.endDate = { $gte: now }; // endDate >= hôm nay
+
     const [items, totalItems] = await Promise.all([
       Promotion.find(filter)
         .sort({ createdAt: -1 })

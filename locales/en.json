@@ -112,7 +112,8 @@
       "success": "Item removed from cart successfully."
     },
     "clear": {
-      "success": "Cart cleared successfully."
+      "success": "Cart cleared successfully.",
+      "empty": "Cart is already empty."
     },
     "notFound": "Cart not found.",
     "itemNotFound": "Item not found in cart.",
@@ -221,7 +222,7 @@
     },
     "notFound": "Review not found.",
     "invalidId": "The provided review ID is invalid.",
-    "alreadyExists": "You have already reviewed this product.",
+    "alreadyExists": "You have already reviewed this order.",
     "notOwned": "You do not have permission to update this review.",
     "updatePeriodExpired": "The time period for updating this review has expired (24 hours).",
     "deletePeriodExpired": "The time period for deleting this review has expired (24 hours).",
@@ -255,6 +256,9 @@
     "invalidCallback": "Invalid payment callback data."
   },
   "user": {
-    "invalidId": "The provided user ID is invalid."
+    "invalidId": "The provided user ID is invalid.",
+    "profile":{
+      "success": "User profile retrieved successfully."
+    }
   }
 }

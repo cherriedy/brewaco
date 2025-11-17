@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 import { Product } from "../../models/product.model.js";
 import { Review } from "../../models/review.model.js";
+import { Order } from "#common/models/order.model.js";
 
 export class CreateReviewService extends BaseReviewService {
   /**
@@ -27,37 +28,60 @@ export class CreateReviewService extends BaseReviewService {
   async createReview(
     userId: string,
     productId: string,
+    orderId: string,
     data: CreateReviewPayload,
   ) {
-    // Validate productId
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      throw new Error("INVALID_PRODUCT_ID");
-    }
 
-    // Check if product exists
-    const product = await Product.findById(productId);
-    if (!product) {
-      throw new Error("PRODUCT_NOT_FOUND");
-    }
+    // Lấy order
+const order = await Order.findOne({
+  _id: orderId,
+  userId,
+  "items.productId": productId,
+});
+if (!order) throw new Error("ORDER_NOT_FOUND");
 
-    // Check if user already reviewed this product
-    const existingReview = await Review.findOne({ productId, userId });
-    if (existingReview) {
-      throw new Error("REVIEW_ALREADY_EXISTS");
-    }
+// Lấy đúng item
+const item = order.items.find(
+  (i) => i.productId.toString() === productId
+);
 
-    // Create the review
-    const review = new Review({
-      comment: data.comment,
-      productId,
-      rating: data.rating,
-      userId,
-    });
-    await review.save();
+if (!item) throw new Error("PRODUCT_NOT_IN_ORDER");
 
-    // Update product ratings
-    await this.updateProductRatings(productId);
+// Check item đã review chưa
+if (item.isReviewed) throw new Error("REVIEW_ALREADY_EXISTS");
 
-    return review;
+// Validate product
+if (!mongoose.Types.ObjectId.isValid(productId)) {
+  throw new Error("INVALID_PRODUCT_ID");
+}
+
+const product = await Product.findById(productId);
+if (!product) throw new Error("PRODUCT_NOT_FOUND");
+
+// Tạo review
+const review = new Review({
+  comment: data.comment,
+  productId,
+  rating: data.rating,
+  userId,
+  orderId,
+});
+await review.save();
+
+// Đánh dấu item
+item.isReviewed = true;
+await order.save();
+
+// Nếu tất cả items đã đánh giá => set order.isReviewed = true
+if (order.items.every((i) => i.isReviewed)) {
+  order.isReviewed = true;
+  await order.save();
+}
+
+// Cập nhật rating cho product
+await this.updateProductRatings(productId);
+
+return review;
+
   }
 }

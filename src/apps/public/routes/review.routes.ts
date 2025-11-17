@@ -1,11 +1,12 @@
 import { createReview } from "#common/controllers/review/create-review.controller.js";
-import { deleteReview } from "#common/controllers/review/delete-review.controller.js";
+import { getReviewsByOrder } from "#common/controllers/review/get-reviews-by-order.controller.js";
 import { updateReview } from "#common/controllers/review/update-review.controller.js";
 import { ensurePurchasedMiddleware } from "#common/middlewares/ensure-purchased.middleware.js";
 import { Router } from "express";
 
 const router = Router();
 
+router.get("/order/:orderId", getReviewsByOrder);
 /**
  * @swagger
  * /reviews:
@@ -121,42 +122,5 @@ router.post("/", ensurePurchasedMiddleware, createReview);
  *         description: Review not found
  */
 router.put("/:id", updateReview);
-
-/**
- * @swagger
- * /reviews/{id}:
- *   delete:
- *     tags: [Reviews]
- *     summary: Delete a review
- *     description: Delete an existing review. User must own the review and delete within 24 hours of creation.
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the review to delete
- *     responses:
- *       200:
- *         description: Review deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *       400:
- *         description: Invalid review ID
- *       403:
- *         description: User does not own the review or deletion period expired
- *       404:
- *         description: Review not found
- */
-router.delete("/:id", deleteReview);
 
 export default router;

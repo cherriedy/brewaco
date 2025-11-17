@@ -13,7 +13,7 @@ export const getCartItems = async (
 ) => {
   const locale = req.locale;
   try {
-    const items = getCartItemsService.getItems(req.user!.id);
+    const items = await getCartItemsService.getItems(req.user!.id);
     apiSuccess(res, items, t("cart.list.success", locale));
   } catch (error: unknown) {
     if (error instanceof Error && error.message === "INVALID_USER_ID") {

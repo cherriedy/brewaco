@@ -115,7 +115,8 @@
       "success": "Xóa sản phẩm khỏi giỏ hàng thành công."
     },
     "clear": {
-      "success": "Xóa giỏ hàng thành công."
+      "success": "Xóa giỏ hàng thành công.",
+      "empty": "Giỏ hàng đã trống."
     },
     "notFound": "Không tìm thấy giỏ hàng.",
     "itemNotFound": "Không tìm thấy sản phẩm trong giỏ hàng.",

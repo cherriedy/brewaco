@@ -1,6 +1,9 @@
 import { getCartItems } from "#common/controllers/cart/get-cart-items.controller.js";
 import { updateCartItem } from "#common/controllers/cart/update-cart-item.controller.js";
+import { addCartItem } from "#common/controllers/cart/add-cart-item.controller.js";
+import { clearCart } from "#common/controllers/cart/clear-cart.controller.js";
 import { Router } from "express";
+
 
 const router = Router();
 
@@ -45,7 +48,6 @@ const router = Router();
  *         description: Unauthorized
  */
 router.get("/", getCartItems);
-
 /**
  * @swagger
  * /cart:
@@ -83,5 +85,7 @@ router.get("/", getCartItems);
  *         description: Unauthorized
  */
 router.patch("/", updateCartItem);
+router.post("/", addCartItem);
+router.delete("/clear", clearCart);     
 
 export default router;

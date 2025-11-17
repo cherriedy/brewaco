@@ -13,10 +13,11 @@ const ensurePurchasedService = new HasPurchasedService();
  * - `req.user` contains the authenticated user's information, including `id`.
  * - `req.locale` is set for localization of error messages.
  * - `req.query.productId` contains the product ID to check.
+ * - `req.query.orderId` contains the order ID to validate.
  *
  * Behavior:
- * 1. If `productId` is missing from the query, responds with a localized error and does not call `next()`.
- * 2. Checks if the user has purchased the product using `HasPurchasedService`.
+ * 1. If `productId` or `orderId` is missing from the query, responds with a localized error and does not call `next()`.
+ * 2. Checks if the user has purchased the product in the specific order using `HasPurchasedService`.
  *    - If not purchased, responds with a localized error and HTTP 403 Forbidden.
  *    - If purchased, calls `next()` to continue processing.
  * 3. For any unexpected errors, passes the error to the next error handler.
@@ -26,24 +27,36 @@ export async function ensurePurchasedMiddleware(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
+  console.log("BODY", req.body);
+
   try {
     const userId = req.user!.id;
     const locale = req.locale;
-    const productId = req.query.productId as string | undefined;
+    const productId = req.body.productId as string | undefined;
+    const orderId = req.body.orderId as string | undefined;
 
     if (!productId) {
       apiError(res, t("productIdRequired", locale));
       return;
     }
 
-    const purchased = await ensurePurchasedService.invoke(userId, productId);
-    if (!purchased)
+    if (!orderId) {
+      apiError(res, t("orderIdRequired", locale));
+      return;
+    }
+
+    const purchased = await ensurePurchasedService.invoke(userId, productId, orderId);
+
+    if (!purchased) {
       apiError(
         res,
         t("review.validation.buyerOnly", locale),
         null,
         StatusCodes.FORBIDDEN,
       );
+      return;
+    }
+
     next();
     return;
   } catch (error: unknown) {
