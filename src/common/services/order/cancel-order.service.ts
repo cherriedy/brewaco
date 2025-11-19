@@ -24,8 +24,8 @@ export class CancelOrderService {
     // đảm bảo orderStatus luôn có giá trị
     const currentStatus = order.orderStatus || "PENDING";
 
-    // Chỉ cho phép hủy khi trạng thái là PENDING hoặc CONFIRM
-    if (!["PENDING", "CONFIRM"].includes(currentStatus)) {
+    // Chỉ cho phép hủy khi trạng thái là PENDING hoặc CONFIRMED
+    if (!["PENDING", "CONFIRMED"].includes(currentStatus)) {
       throw new Error("ORDER_CANNOT_BE_CANCELLED");
     }
 

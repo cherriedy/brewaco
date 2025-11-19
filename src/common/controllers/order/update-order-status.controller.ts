@@ -36,6 +36,10 @@ export const updateOrderStatus = async (
         apiError(res, t("order.invalidStatusTransition", locale), null, 400);
         return;
       }
+      if (error.message === "PAYMENT_INVALID_STATUS_TRANSITION") {
+        apiError(res, t("order.invalidPaymentStatusTransition", locale), null, 400);
+        return;
+      }
     }
     next(error);
   }

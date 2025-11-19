@@ -18,4 +18,12 @@ export const createContactSchema = z.object({
     .min(contactConfig.name.minLength, "contact.validation.name.minLength"),
 });
 
+export const updateContactStateSchema = z.object({
+  state: z.enum(
+    ["new", "replied"],
+    { message: "contact.validation.invalidState" }
+  ),
+});
+
 export type CreateContactPayload = z.infer<typeof createContactSchema>;
+export type UpdateContactStatePayload = z.infer<typeof updateContactStateSchema>;

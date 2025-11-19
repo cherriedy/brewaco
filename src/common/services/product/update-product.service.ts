@@ -2,6 +2,8 @@ import { UpdateProductPayload } from "#common/models/validation/product.validati
 import mongoose from "mongoose";
 
 import { Product } from "../../models/product.model.js";
+import cloudinary from "#config/cloudinary.js";
+import { getSlug } from "#common/utils/text-utilities.js";
 
 export class UpdateProductService {
   /**
@@ -30,7 +32,7 @@ export class UpdateProductService {
    * @returns Promise<Product> - Resolves with the updated product instance.
    * @throws Error if product not found, invalid ID, or slug conflict.
    */
-  async updateProduct(id: string, data: UpdateProductPayload) {
+  async updateProduct(id: string, data: UpdateProductPayload & { files?: Express.Multer.File[] }) {
     // Validate product ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error("INVALID_PRODUCT_ID");
@@ -42,8 +44,10 @@ export class UpdateProductService {
 
     // If slug is being updated, check for conflicts
     if (data.slug && data.slug !== product.slug) {
-      const existing = await Product.findOne({ slug: data.slug });
+      const slug = getSlug(data.slug);
+      const existing = await Product.findOne({ slug });
       if (existing) throw new Error("PRODUCT_ALREADY_EXISTS");
+      product.slug = slug;
     }
 
     // Validate categoryId if provided
@@ -51,8 +55,29 @@ export class UpdateProductService {
       throw new Error("INVALID_CATEGORY_ID");
     }
 
-    // Update product
-    Object.assign(product, data);
+    // Upload file mới nếu có
+    if (data.files && data.files.length > 0) {
+      const uploadedImages: string[] = [];
+      for (const file of data.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "brewaco",
+        });
+        uploadedImages.push(result.secure_url);
+      }
+      // Merge images cũ + mới
+      product.images = [...(data.images || []), ...uploadedImages];
+    } else {
+      // Không upload ảnh mới -> dùng đúng ảnh FE gửi lên
+      product.images = data.images || [];
+    }
+
+    // Update các trường còn lại
+    const fieldsToUpdate = { ...data };
+    delete fieldsToUpdate.files; // đã xử lý riêng
+    delete fieldsToUpdate.slug;  
+    delete fieldsToUpdate.images;
+    Object.assign(product, fieldsToUpdate);
+
     await product.save();
     return product;
   }

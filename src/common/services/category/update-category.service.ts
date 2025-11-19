@@ -1,4 +1,5 @@
 import { UpdateCategoryPayload } from "#common/models/validation/category.validation.js";
+import { getSlug } from "#common/utils/text-utilities.js";
 
 import { Category } from "../../models/category.model.js";
 
@@ -14,15 +15,37 @@ export class UpdateCategoryService {
    * @returns Promise resolving to the updated category document, or throws an error if not found.
    */
   async updateCategory(id: string, data: UpdateCategoryPayload) {
-    const category = await Category.findByIdAndUpdate(id, data, {
-      new: true,
-      runValidators: true,
-    });
-
+    // 1. Lấy category trước
+    const category = await Category.findById(id);
     if (!category) {
       throw new Error("CATEGORY_NOT_FOUND");
     }
+    let newSlug = null;
+
+    if (data.slug) {
+      newSlug = getSlug(data.slug);
+    }
+
+    if (data.name) {
+      const autoSlug = getSlug(data.name);
+      newSlug = newSlug || autoSlug;
+    }
+
+    if (newSlug) {
+      const exists = await Category.findOne({
+        slug: newSlug,
+        _id: { $ne: id },
+      });
+      if (exists) throw new Error("CATEGORY_ALREADY_EXISTS");
+      category.slug = newSlug;
+    }
+
+    if (data.name !== undefined) category.name = data.name;
+    if (data.description !== undefined) category.description = data.description;
+
+    await category.save();
 
     return category;
   }
+
 }

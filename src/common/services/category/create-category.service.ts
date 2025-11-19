@@ -2,6 +2,7 @@ import {
   CreateCategoryPayload,
   createCategorySchema,
 } from "#common/models/validation/category.validation.js";
+import { getSlug } from "#common/utils/text-utilities.js";
 
 import { Category } from "../../models/category.model.js";
 
@@ -23,8 +24,9 @@ export class CreateCategoryService {
    * @throws Error if validation fails or the category name already exists.
    */
   async createCategory(data: CreateCategoryPayload) {
-    // Check if category with same name already exists
-    const existing = await Category.findOne({ name: data.name });
+    // Check duplicate slug
+    const slug = getSlug(data.slug || data.name);
+    const existing = await Category.findOne({ slug });
     if (existing) throw new Error("CATEGORY_ALREADY_EXISTS");
 
     const category = new Category(data);

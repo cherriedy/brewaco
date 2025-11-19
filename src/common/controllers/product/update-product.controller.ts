@@ -30,11 +30,27 @@ export const updateProduct = async (
 ): Promise<void> => {
   const locale = req.locale;
   try {
-    const validated = updateProductSchema.parse(req.body);
-    const product = await updateProductService.updateProduct(
-      req.params.id,
-      validated,
-    );
+
+    const multerFiles = req.files as { [k: string]: Express.Multer.File[] };
+    const files = multerFiles?.files || [];
+
+    const data = {
+      ...req.body,
+      price: Number(req.body.price),
+      discount: Number(req.body.discount),
+      stock: Number(req.body.stock),
+      images: Array.isArray(req.body.images)
+        ? req.body.images
+        : req.body.images ? [req.body.images] : []
+    };
+
+    const validated = updateProductSchema.parse(data);
+    const finalData = {
+      ...validated,
+      files,
+    };
+
+    const product = await updateProductService.updateProduct(req.params.id, finalData);
     apiSuccess(res, product, t("product.update.success", locale));
   } catch (error: unknown) {
     // Handle validation errors from Zod

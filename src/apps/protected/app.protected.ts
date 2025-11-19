@@ -5,6 +5,7 @@ import protectedOrderRoutes from "#apps/protected/routes/order.routes.js";
 import protectedProductRoutes from "#apps/protected/routes/product.routes.js";
 import protectedPromotionRoutes from "#apps/protected/routes/promotion.routes.js";
 import protectedReviewRoutes from "#apps/protected/routes/review.routes.js";
+import protectedUserRoutes from "#apps/protected/routes/user.routes.js";
 import { authenticationMiddleware } from "#common/middlewares/authentication.middleware.js";
 import { authorizationMiddleware } from "#common/middlewares/authorization.middleware.js";
 import { deviceContextMiddleware } from "#common/middlewares/device-context.middleware.js";
@@ -20,7 +21,7 @@ import morgan from "morgan";
 
 const app = express();
 const port = process.env.PROTECTED_PORT ?? "9002";
-const allowedOrigins = [/^https?:\/\/admin\.domain\..*/];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
 
 // Initialize database and i18n
 await initConnection();
@@ -54,6 +55,7 @@ app.use("/contact", protectedContactRoutes);
 app.use("/promotions", protectedPromotionRoutes);
 app.use("/orders", protectedOrderRoutes);
 app.use("/reviews", protectedReviewRoutes);
+app.use("/users", protectedUserRoutes);
 
 // Error handling middleware - must be after all routes
 app.use(internalErrorMiddleware);

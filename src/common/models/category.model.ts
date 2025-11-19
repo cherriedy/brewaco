@@ -13,9 +13,11 @@ const categorySchema = new Schema<ICategory>(
 
 categorySchema.pre("validate", function (next) {
   if (!this.slug || this.slug.trim() === "") {
-    this.slug = getSlug(this.name);
-    next();
+    if (this.name && this.name.trim() !== "") {
+      this.slug = getSlug(this.name);
+    }
   }
+  next();
 });
 
 export const Category = model<ICategory>("Category", categorySchema);

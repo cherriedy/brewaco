@@ -29,7 +29,7 @@ export class GetContactsService {
       .limit(pageSize)
       .lean();
 
-    const total = await Product.countDocuments();
+    const total = await Contact.countDocuments();
     const totalPage = total > 0 ? Math.ceil(total / pageSize) : 1;
 
     return {

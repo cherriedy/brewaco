@@ -31,9 +31,13 @@ export const createOrderSchema = z.object({
 
 export const updateOrderStatusSchema = z.object({
   orderStatus: z.enum(
-    ["PENDING", "CONFIRM", "SHIPPING", "DELIVERED", "CANCELLED"],
+    ["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"],
     { message: "order.validation.invalidStatus" }
-  ),
+  ).optional(),
+  paymentStatus: z.enum(
+    ["PENDING", "PAID", "FAILED"],
+    { message: "order.validation.invalidStatus" }
+  ).optional(),
 });
 
 export const getOrdersQuerySchema = z.object({
@@ -44,7 +48,7 @@ export const getOrdersQuerySchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
 
   status: z
-    .enum(["PENDING", "CONFIRM", "SHIPPING", "DELIVERED", "CANCELLED"])
+    .enum(["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"])
     .optional(),
 });
 

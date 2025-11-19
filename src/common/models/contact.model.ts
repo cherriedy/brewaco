@@ -8,7 +8,7 @@ const contactSchema = new Schema<IContact>(
     name: { required: true, type: String },
     state: { default: "new", enum: ["new", "replied"], type: String },
   },
-  { timestamps: { createdAt: true, updatedAt: false }, versionKey: false },
+  { timestamps: true, versionKey: false },
 );
 
 contactSchema.pre("save", function (next) {

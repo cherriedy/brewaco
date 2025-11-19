@@ -38,9 +38,11 @@ productSchema.index({ ratingsAverage: -1 });
 
 productSchema.pre("validate", function (next) {
   if (!this.slug || this.slug.trim() === "") {
-    this.slug = getSlug(this.name);
-    next();
+    if (this.name && this.name.trim() !== "") {
+      this.slug = getSlug(this.name);
+    }
   }
+  next();
 });
 
 // After saving a product, update the MeiliSearch index asynchronously

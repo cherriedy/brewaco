@@ -62,6 +62,16 @@ export const updateCategory = async (
       return;
     }
 
+    if (error instanceof Error && error.message === "CATEGORY_ALREADY_EXISTS") {
+      apiError(
+        res,
+        t("category.alreadyExists", locale),
+        null,
+        StatusCodes.CONFLICT,
+      );
+      return;
+    }
+
     if (error instanceof Error) {
       next(error);
     }

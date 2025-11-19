@@ -49,12 +49,12 @@ const orderSchema = new Schema<IOrder>(
     },
     paymentStatus: {
       type: String,
-      enum: ["PENDING", "PAID", "FAILD"],
+      enum: ["PENDING", "PAID", "FAILED"],
       default: "PENDING"
     },
     orderStatus: {
       type: String,
-      enum: ["PENDING", "CONFIRM", "SHIPPING", "DELIVERED", "CANCELLED"],
+      enum: ["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"],
       default: "PENDING"
     },
 

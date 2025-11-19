@@ -2,6 +2,8 @@ import { CreateProductPayload } from "#common/models/validation/product.validati
 import mongoose from "mongoose";
 
 import { Product } from "../../models/product.model.js";
+import cloudinary from "#config/cloudinary.js";
+import { getSlug } from "#common/utils/text-utilities.js";
 
 export class CreateProductService {
   /**
@@ -29,19 +31,39 @@ export class CreateProductService {
    * @returns Promise<Product> - Resolves with the newly created product instance on success.
    * @throws Error if validation fails, category doesn't exist, or the product slug already exists.
    */
-  async createProduct(data: CreateProductPayload) {
+  async createProduct(data: CreateProductPayload & { files?: Express.Multer.File[] }) {
     // Validate categoryId
     if (!mongoose.Types.ObjectId.isValid(data.categoryId)) {
       throw new Error("INVALID_CATEGORY_ID");
     }
 
-    // Check if product with same slug already exists (if slug is provided)
-    if (data.slug) {
-      const existing = await Product.findOne({ slug: data.slug });
-      if (existing) throw new Error("PRODUCT_ALREADY_EXISTS");
+    // Check duplicate slug
+    const slug = getSlug(data.slug || data.name);
+    const existing = await Product.findOne({ slug });
+    if (existing) throw new Error("PRODUCT_ALREADY_EXISTS");
+
+
+    // Upload images nếu có file
+    let uploadedImages: string[] = [];
+    if (data.files && data.files.length > 0) {
+      for (const file of data.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "brewaco",
+        });
+        uploadedImages.push(result.secure_url);
+      }
     }
 
-    const product = new Product(data);
+
+    // Merge images upload + any URLs provided in `images` field
+    const finalImages = [...(data.images || []), ...uploadedImages];
+
+    const product = new Product({
+      ...data,
+      images: finalImages,
+    });
+
+
     await product.save();
     return product;
   }

@@ -40,7 +40,7 @@ const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
     cart: ["read", "write", "update", "delete"],
     orders: ["read", "write", "update", "delete"],
     categories: ["read", "write", "update", "delete"],
-    contact: ["read"],
+    contact: ["read", "update"],
     products: ["read", "write", "update", "delete"],
     reviews: ["read"],
     users: ["read", "write", "update", "delete"],

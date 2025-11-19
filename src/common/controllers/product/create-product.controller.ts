@@ -30,8 +30,20 @@ export const createProduct = async (
 ): Promise<void> => {
   const locale = req.locale;
   try {
-    const validated = createProductSchema.parse(req.body);
-    const product = await createProductService.createProduct(validated);
+    const files = req.files as Express.Multer.File[];
+    const data = {
+      ...req.body,
+      price: Number(req.body.price),
+      discount: Number(req.body.discount),
+      stock: Number(req.body.stock)
+    };
+
+    const validated = createProductSchema.parse(data);
+    const finalData = {
+      ...validated,
+      files,
+    };
+    const product = await createProductService.createProduct(finalData);
     apiSuccess(res, product, t("product.create.success", locale));
   } catch (error: unknown) {
     // Handle validation errors from Zod

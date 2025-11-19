@@ -133,8 +133,11 @@
       "name": {
         "minLength": "Name is too short.",
         "required": "Name is required."
-      }
-    }
+      },
+      "invalidState": "Invalid contact state."
+    },
+    "notFound": "Contact not found or is not active.",
+    "invalidStateTransition": "Cannot change contact state from current state to requested state."
   },
   "promotion": {
     "list": {
@@ -192,6 +195,7 @@
     "insufficientStock": "Insufficient stock for one or more products in your order.",
     "cannotBeCancelled": "This order cannot be cancelled at its current status.",
     "invalidStatusTransition": "Cannot change order status from current state to requested state.",
+    "invalidPaymentStatusTransition": "Cannot change payment status from current state to requested state.",
     "validation": {
       "productIdRequired": "Product ID is required.",
       "productNameRequired": "Product name is required.",
