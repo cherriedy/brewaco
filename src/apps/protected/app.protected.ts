@@ -1,5 +1,6 @@
 import authRoutes from "#apps/protected/routes/auth.routes.js";
 import protectedCategoryRoutes from "#apps/protected/routes/category.routes.js";
+import protectedTypeRoutes from "#apps/protected/routes/type.routes.js";
 import protectedContactRoutes from "#apps/protected/routes/contact.routes.js";
 import protectedOrderRoutes from "#apps/protected/routes/order.routes.js";
 import protectedProductRoutes from "#apps/protected/routes/product.routes.js";
@@ -50,6 +51,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/categories", protectedCategoryRoutes);
+app.use("/types", protectedTypeRoutes);
 app.use("/products", protectedProductRoutes);
 app.use("/contact", protectedContactRoutes);
 app.use("/promotions", protectedPromotionRoutes);

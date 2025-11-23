@@ -5,6 +5,7 @@ import publicContactRoutes from "#apps/public/routes/contact.routes.js";
 import publicOrderRoutes from "#apps/public/routes/order.routes.js";
 import publicPaymentRoutes from "#apps/public/routes/payment.routes.js";
 import publicProductRoutes from "#apps/public/routes/product.routes.js";
+import publicTypeRoutes from "#apps/public/routes/type.routes.js";
 import publicPromotionRoutes from "#apps/public/routes/promotion.routes.js";
 import publicReviewRoutes from "#apps/public/routes/review.routes.js";
 import publicUserRoutes from "#apps/public/routes/user.routes.js";
@@ -50,6 +51,7 @@ app.get("/", publicRoute, (req: Request, res: Response) => {
 
 app.use("/auth", publicRoute, authRoutes);
 app.use("/categories", publicRoute, publicCategoryRoutes);
+app.use("/types", publicRoute, publicTypeRoutes);
 app.use("/products", publicRoute, publicProductRoutes);
 app.use("/contact", publicRoute, publicContactRoutes);
 app.use("/promotions", publicRoute, publicPromotionRoutes);

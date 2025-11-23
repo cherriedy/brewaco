@@ -16,7 +16,7 @@ export const createProductSchema = z.object({
   ratingsCount: z.number().min(0).default(0).optional(),
   slug: z.string().optional(),
   stock: z.number().min(0, "product.validation.stockMin").default(0),
-  type: z.string().min(1, "product.validation.typeRequired"),
+  typeId: z.string().min(1, "product.validation.typeRequired"),
   weight: z.string().min(1, "product.validation.weightRequired"),
 });
 
@@ -42,7 +42,10 @@ export const updateProductSchema = z.object({
   // ratingsCount: z.number().min(0).optional(),
   slug: z.string().optional(),
   stock: z.number().min(0, "product.validation.stockMin").optional(),
-  type: z.string().min(1, "product.validation.typeRequired").optional(),
+  typeId: z
+    .string()
+    .min(1, "type.validation.typeIdRequired")
+    .optional(),
   weight: z.string().min(1, "product.validation.weightRequired").optional(),
 });
 

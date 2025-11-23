@@ -5,6 +5,7 @@ export type Permission = "delete" | "read" | "update" | "write";
 export type Resource =
   | "cart"
   | "categories"
+  | "types"
   | "contact"
   | "products"
   | "reviews"
@@ -32,6 +33,7 @@ const RESOURCE_MAPPING: Record<string, Resource> = {
   "^/promotions.*": "promotions",
   "^/orders.*": "orders",
   "^/payment.*": "payment",
+  "^/types.*": "types"
 };
 
 const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
@@ -40,6 +42,7 @@ const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
     cart: ["read", "write", "update", "delete"],
     orders: ["read", "write", "update", "delete"],
     categories: ["read", "write", "update", "delete"],
+    types: ["read", "write", "update", "delete"],
     contact: ["read", "update"],
     products: ["read", "write", "update", "delete"],
     reviews: ["read"],
@@ -51,6 +54,7 @@ const RESOURCES_FOR_ROLES: Record<Role, Resources> = {
     cart: ["read", "write", "update", "delete"],
     orders: ["read", "write", "update"],
     categories: ["read"],
+    types: ["read"],
     contact: [],
     products: ["read"],
     reviews: ["read", "write", "update"],

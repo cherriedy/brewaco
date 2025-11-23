@@ -22,7 +22,11 @@ const productSchema = new Schema<IProduct>(
     stock: { type: Number, required: true, min: 0, default: 0 },
     images: { type: [String], default: [] },
     origin: { type: String, required: true },
-    type: { type: String, required: true },
+    typeId: {
+      type: Schema.Types.ObjectId,
+      ref: "Type",
+      required: true,
+    },
     weight: { type: String, required: true },
     ratingsAverage: { type: Number, default: 0, min: 0, max: 5 },
     ratingsCount: { type: Number, default: 0, min: 0 },

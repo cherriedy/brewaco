@@ -19,10 +19,10 @@ export class GetProductService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error("INVALID_PRODUCT_ID");
     }
-    const product = await Product.findById(id).populate(
-      "categoryId", // Replace with actual category field if different
-      "name slug", // Fields to select from the category
-    );
+    const product = await Product.findById(id).populate([
+      { path: "categoryId", select: "name slug" },
+      { path: "typeId", select: "name slug" }
+    ]);
     if (!product) throw new Error("PRODUCT_NOT_FOUND");
     return product;
   }

@@ -68,6 +68,28 @@
     "validation": {
       "nameRequired": "Category name is required."
     }
+  },"type": {
+    "list": {
+      "success": "Types retrieved successfully."
+    },
+    "get": {
+      "success": "Type retrieved successfully."
+    },
+    "create": {
+      "success": "Type created successfully."
+    },
+    "update": {
+      "success": "Type updated successfully."
+    },
+    "delete": {
+      "success": "Type deleted successfully."
+    },
+    "notFound": "Type not found.",
+    "invalidId": "The provided type ID is invalid.",
+    "alreadyExists": "A type with this name already exists.",
+    "validation": {
+      "nameRequired": "Type name is required."
+    }
   },
   "product": {
     "list": {
