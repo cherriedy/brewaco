@@ -17,7 +17,7 @@ export interface ProductSummary {
   ratingsCount: number;
   slug: string;
   stock: number;
-  type: string;
+  typeId: string;
 }
 
 export class GetProductsService {
@@ -45,6 +45,7 @@ export class GetProductsService {
         "_id name slug categoryId price discount stock images type ratingsAverage ratingsCount",
       )
       .populate("categoryId", "name slug")
+      .populate("typeId", "name")  
       .sort({ [sortBy]: sortOrder })
       .skip(page * pageSize)
       .limit(pageSize)

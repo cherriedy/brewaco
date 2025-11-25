@@ -22,7 +22,7 @@ export class CancelOrderService {
     }
 
     // đảm bảo orderStatus luôn có giá trị
-    const currentStatus = order.orderStatus || "PENDING";
+    const currentStatus = order.status || "PENDING";
 
     // Chỉ cho phép hủy khi trạng thái là PENDING hoặc CONFIRMED
     if (!["PENDING", "CONFIRMED"].includes(currentStatus)) {
@@ -36,7 +36,7 @@ export class CancelOrderService {
       });
     }
 
-    order.orderStatus = "CANCELLED";
+    order.status = "CANCELLED";
     order.cancelledTimestamp = new Date(); 
     await order.save();
 

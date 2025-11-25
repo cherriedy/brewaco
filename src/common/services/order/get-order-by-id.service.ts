@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 import { Order } from "../../models/order.model.js";
+import { Payment } from "#common/models/payment.model.js";
 
 export class GetOrderByIdService {
   /**
@@ -21,6 +22,13 @@ export class GetOrderByIdService {
       throw new Error("ORDER_NOT_FOUND");
     }
 
-    return order;
+    const payment = await Payment.findOne({
+      orderId: new Types.ObjectId(orderId),
+    });
+
+    return {
+      order,
+      payment,
+    };
   }
 }

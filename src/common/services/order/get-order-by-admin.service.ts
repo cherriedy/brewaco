@@ -1,3 +1,5 @@
+import { Payment } from "#common/models/payment.model.js";
+import { Types } from "mongoose";
 import { Order } from "../../models/order.model.js";
 
 export class GetOrderByIdForAdminService {
@@ -16,6 +18,13 @@ export class GetOrderByIdForAdminService {
       throw new Error("ORDER_NOT_FOUND");
     }
 
-    return order;
+    const payment = await Payment.findOne({
+      orderId: new Types.ObjectId(orderId),
+    });
+
+    return {
+      order,
+      payment,
+    };
   }
 }

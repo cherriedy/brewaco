@@ -22,7 +22,7 @@ export class GetOrdersService {
     const sort: any = {};
     sort[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-    const skip = (page - 1) * limit;
+    const skip = page * limit;
 
     const [orders, total] = await Promise.all([
       Order.find(filter)
@@ -39,7 +39,7 @@ export class GetOrdersService {
         limit,
         page,
         total,
-        totalPages: Math.ceil(total / limit),
+        totalPages: total > 0 ? Math.ceil(total / limit) : 1,
       },
     };
   }

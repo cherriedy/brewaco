@@ -64,7 +64,7 @@ app.use(authorizationMiddleware);
 // Protected routes
 app.use("/users", publicUserRoutes);
 app.use("/cart", publicCartRoutes);
-app.use("/payment", publicPaymentRoutes);
+app.use("/payments", publicPaymentRoutes);
 app.use("/orders", publicOrderRoutes);
 app.use("/reviews", publicReviewRoutes);
 

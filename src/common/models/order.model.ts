@@ -40,43 +40,31 @@ const orderSchema = new Schema<IOrder>(
       ref: "User",
       required: true,
     },
+
     items: { type: [orderItemSchema], required: true },
     totalAmount: { type: Number, required: true, min: 0 },
-    paymentMethod: {
-      type: String,
-      enum: ["COD", "VNPAY", "MOMO"],
-      required: true,
-    },
-    paymentStatus: {
-      type: String,
-      enum: ["PENDING", "PAID", "FAILED"],
-      default: "PENDING"
-    },
-    orderStatus: {
+
+    status: {
       type: String,
       enum: ["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"],
       default: "PENDING"
     },
 
-    // Các mốc thời gian theo trạng thái
-    paidTimestamp: { type: Date },
-    failedTimestamp: { type: Date },
-    confirmedTimestamp: { type: Date },
-    shippingTimestamp: { type: Date },
-    deliveredTimestamp: { type: Date },
-    cancelledTimestamp: { type: Date },
+    confirmedTimestamp: Date,
+    shippingTimestamp: Date,
+    deliveredTimestamp: Date,
+    cancelledTimestamp: Date,
 
     shippingAddress: { type: shippingAddressSchema, required: true },
-    promotionCode: { type: String },
-    discountAmount: { type: Number, default: 0, min: 0 },
-    note: { type: String },
 
-    isReviewed: {
-      type: Boolean,
-      default: false,
-    }
+    promotionCode: { type: String },
+    discountAmount: { type: Number, default: 0 },
+
+    note: String,
+
+    isReviewed: { type: Boolean, default: false },
   },
-  { timestamps: true, versionKey: false },
+  { timestamps: true, versionKey: false }
 );
 
 // Indexes for efficient queries

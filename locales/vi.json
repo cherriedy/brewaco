@@ -189,6 +189,9 @@
     "cancel": {
       "success": "Hủy đơn hàng thành công."
     },
+    "refund": {
+      "success": "Đơn hàng đã được hoàn tiền thành công."
+    },
     "notFound": "Không tìm thấy đơn hàng.",
     "invalidProducts": "Một số sản phẩm trong đơn hàng không hợp lệ.",
     "productNotFound": "Không tìm thấy một hoặc nhiều sản phẩm trong đơn hàng.",
@@ -196,6 +199,7 @@
     "cannotBeCancelled": "Không thể hủy đơn hàng ở trạng thái hiện tại.",
     "invalidStatusTransition": "Không thể chuyển trạng thái đơn hàng từ trạng thái hiện tại sang trạng thái yêu cầu.",
     "invalidPaymentStatusTransition": "Không thể chuyển trạng thái đơn hàng từ trạng thái hiện tại sang trạng thái yêu cầu.",
+    "mustCancelBeforeRefund" : "Đơn hàng phải hủy trước khi hoàn tiền",
     "validation": {
       "productIdRequired": "ID sản phẩm là bắt buộc.",
       "productNameRequired": "Tên sản phẩm là bắt buộc.",
@@ -257,7 +261,9 @@
     "unauthorized": "Bạn không có quyền thanh toán cho đơn hàng này.",
     "invalidOrderStatus": "Đơn hàng không ở trạng thái hợp lệ để thanh toán.",
     "gatewayNotSupported": "Cổng thanh toán không được hỗ trợ.",
-    "invalidCallback": "Dữ liệu callback thanh toán không hợp lệ."
+    "invalidCallback": "Dữ liệu callback thanh toán không hợp lệ.",
+    "onlyMomoAllowed" : "Phương thức thanh toán này không hỗ trợ hoàn tiền, chỉ Momo",
+    "notPaid" : "Chưa thanh toán, không thể hoàn tiền"
   },
   "user": {
     "invalidId": "ID người dùng không hợp lệ."

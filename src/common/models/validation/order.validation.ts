@@ -19,9 +19,6 @@ const shippingAddressSchema = z.object({
 
 export const createOrderSchema = z.object({
   items: z.array(orderItemSchema).min(1, "order.validation.itemsRequired"),
-  paymentMethod: z.enum(["COD", "VNPAY", "MOMO"], {
-    message: "order.validation.invalidPaymentMethod",
-  }),
   promotionCode: z.string().optional(),
   totalAmount: z.number().min(0, "order.validation.totalAmountPositive"),
   shippingAddress: shippingAddressSchema,
@@ -30,21 +27,17 @@ export const createOrderSchema = z.object({
 });
 
 export const updateOrderStatusSchema = z.object({
-  orderStatus: z.enum(
+  status: z.enum(
     ["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"],
     { message: "order.validation.invalidStatus" }
-  ).optional(),
-  paymentStatus: z.enum(
-    ["PENDING", "PAID", "FAILED"],
-    { message: "order.validation.invalidStatus" }
-  ).optional(),
+  ).optional()
 });
 
 export const getOrdersQuerySchema = z.object({
   limit: z.number().int().min(1).max(100).optional().default(10),
-  page: z.number().int().min(1).optional().default(1),
+  page: z.number().int().min(0).optional().default(0),
 
-  sortBy: z.enum(["createdAt", "totalAmount", "orderStatus"]).optional().default("createdAt"),
+  sortBy: z.enum(["createdAt", "totalAmount", "status"]).optional().default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
 
   status: z

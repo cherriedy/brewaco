@@ -211,6 +211,9 @@
     "cancel": {
       "success": "Order cancelled successfully."
     },
+    "refund": {
+      "success": "Order refunded successfully."
+    },
     "notFound": "Order not found.",
     "invalidProducts": "Some products in your order are invalid.",
     "productNotFound": "One or more products in your order could not be found.",
@@ -218,6 +221,7 @@
     "cannotBeCancelled": "This order cannot be cancelled at its current status.",
     "invalidStatusTransition": "Cannot change order status from current state to requested state.",
     "invalidPaymentStatusTransition": "Cannot change payment status from current state to requested state.",
+    "mustCancelBeforeRefund" : "Order must be canceled before refund",
     "validation": {
       "productIdRequired": "Product ID is required.",
       "productNameRequired": "Product name is required.",
@@ -279,7 +283,9 @@
     "unauthorized": "You are not authorized to make payment for this order.",
     "invalidOrderStatus": "Order is not in a valid state for payment.",
     "gatewayNotSupported": "Payment gateway is not supported.",
-    "invalidCallback": "Invalid payment callback data."
+    "invalidCallback": "Invalid payment callback data.",
+    "onlyMomoAllowed" : "This payment method does not support refunds, only Momo",
+    "notPaid" : "Not paid, cannot refund"
   },
   "user": {
     "invalidId": "The provided user ID is invalid.",

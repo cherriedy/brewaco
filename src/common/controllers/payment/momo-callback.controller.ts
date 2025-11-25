@@ -1,19 +1,26 @@
-import { Request, Response } from "express";
-import { handleMomoCallback } from "#common/services/payment/momo-callback.service.js";
+import { Request, Response, NextFunction } from "express";
+import { apiError, apiSuccess } from "#common/utils/api-response.js";
+import { t } from "#common/utils/i18n.js";
+import { VerifyMomoCallbackService } from "#common/services/payment/verify-momo-callback.service.js";
 
-export const momoCallback = async (req: Request, res: Response) => {
-    try {
-        await handleMomoCallback(req.body);
-        res.status(200).json({ message: "ok" });
-        console.log("📥 CALLBACK RECEIVED FROM MOMO:");
-        console.log(req.body);
-    } catch (err) {
-        console.error("Momo callback error:", err);
+export const momoCallback = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const locale = req.locale;
 
-        if (err instanceof Error) {
-            return res.status(500).json({ message: err.message });
-        }
-
-        res.status(500).json({ message: "Callback xử lý lỗi" });
+  try {
+    const payment = await VerifyMomoCallbackService.execute(req.body);
+    return apiSuccess(
+      res,
+      payment,
+      t("payment.momo.callbackSuccess", locale)
+    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return apiError(res, error.message);
     }
+    next(error);
+  }
 };

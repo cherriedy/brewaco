@@ -1,5 +1,4 @@
-import { OrderStatus } from "#types/order.js";
-import { PaymentMethod, PaymentStatus } from "#types/payment.js";
+import { status } from "#types/order.js";
 import { Types } from "mongoose";
 
 export interface Order {
@@ -7,11 +6,7 @@ export interface Order {
   userId: Types.ObjectId;
   items: OrderItem[];
   totalAmount: number;
-  paymentMethod: PaymentMethod;
-  paymentStatus?: PaymentStatus;
-  orderStatus?: OrderStatus;
-  paidTimestamp?: Date;
-  failedTimestamp?: Date;
+  status?: status;
   confirmedTimestamp?: Date;
   shippingTimestamp?: Date;
   deliveredTimestamp?: Date;

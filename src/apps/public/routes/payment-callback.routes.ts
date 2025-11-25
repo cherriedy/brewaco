@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { momoCallback } from "#common/controllers/payment/momo-callback.controller.js";
-import { vnpayReturn } from "#common/controllers/payment/vnpay-payment.controller.js";
+import { vnpayCallback } from "#common/controllers/payment/vnpay-callback.controller.js";
 
 const router = Router();
 
 // Callback là public, không auth middleware
 router.post("/momo", momoCallback);
-router.get("/vnpay", vnpayReturn);
+router.post("/vnpay", vnpayCallback);
 
 export default router;

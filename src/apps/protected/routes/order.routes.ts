@@ -7,6 +7,6 @@ const router = Router();
 
 router.get("/", getAllOrders);
 router.get("/:id", getOrderByIdForAdmin);
-router.patch("/:id/status", updateOrderStatus);
+router.patch("/:id", updateOrderStatus);
 
 export default router;
