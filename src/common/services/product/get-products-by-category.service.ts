@@ -14,6 +14,7 @@ export class GetProductsByCategoryService {
     const products = await Product.find(filter)
       .select("_id name slug categoryId price discount stock images type ratingsAverage ratingsCount")
       .populate("categoryId", "name slug")
+      .populate("typeId", "name slug")
       .sort({ [sortBy]: sortOrder })
       .skip(page * pageSize)
       .limit(pageSize)
