@@ -59,15 +59,26 @@ export const getProducts = async (
         apiSuccess(res, result, t("product.list.success", req.locale));
         return;
       } catch (searchError) {
-        // If MeiliSearch fails, log and fall back to DB listing
+        // If MeiliSearch fails, log and fall back to MongoDB search
         logger.error(
-          "MeiliSearch query failed, falling back to DB:",
+          "MeiliSearch query failed, falling back to MongoDB search:",
           searchError,
         );
+
+        // Fallback to MongoDB-based search
+        const products = await getProductsService.searchProducts(
+          q,
+          page,
+          pageSize,
+          sortOrder,
+          sortBy,
+        );
+        apiSuccess(res, products, t("product.list.success", req.locale));
+        return;
       }
     }
 
-    // Fallback to MongoDB for standard listing (no search query or MeiliSearch failed)
+    // No search query provided, return standard product listing
     const products = await getProductsService.getProducts(
       page,
       pageSize,
