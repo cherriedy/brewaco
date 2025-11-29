@@ -1,4 +1,5 @@
 import { Order } from "#common/models/order.model.js";
+import { Payment } from "#common/models/payment.model.js";
 import { reviewConfig } from "#config/app.js";
 
 export const ALLOWED_ORDER_STATUS = reviewConfig.orderStatus.allowed;
@@ -18,12 +19,20 @@ export class HasPurchasedService {
       _id: orderId,
       userId,
       "items.productId": productId,
-      orderStatus: { $in: ALLOWED_ORDER_STATUS },
-      paymentStatus: { $in: ALLOWED_PAYMENT_STATUS },
+      status: { $in: ALLOWED_ORDER_STATUS },
     })
       .lean()
       .select("_id");
 
-    return Boolean(order);
+    if (!order) return false;
+
+    const payment = await Payment.findOne({
+      orderId,
+      status: { $in: ALLOWED_PAYMENT_STATUS },
+    })
+      .lean()
+      .select("_id");
+
+    return Boolean(payment);
   }
 }
