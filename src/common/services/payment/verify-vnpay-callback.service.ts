@@ -1,41 +1,36 @@
-import crypto from "crypto";
+import { VNPayGateway } from "#gateway/payment/vnpay.gateway.js";
 import { Payment } from "#common/models/payment.model.js";
 import { Order } from "#common/models/order.model.js";
-
-const vnp_HashSecret = process.env.VNP_HASH_SECRET!;
+import logger from "#common/utils/logger.js";
 
 export class VerifyVnpayCallbackService {
   static async execute(query: Record<string, string>) {
-    const vnp_SecureHash = query["vnp_SecureHash"];
-    const vnp_Params = { ...query };
-    delete vnp_Params["vnp_SecureHash"];
-    delete vnp_Params["vnp_SecureHashType"];
+    const gateway = new VNPayGateway();
 
-    const sortedKeys = Object.keys(vnp_Params).sort();
-   const signData = sortedKeys.map(key => `${key}=${encodeURIComponent(vnp_Params[key])}`).join("&");
-const secureHash = crypto.createHmac("sha512", vnp_HashSecret).update(signData).digest("hex");
-console.log("signData callback: ", signData)
-console.log("secureHash callback: ", secureHash)
-console.log("vnp_SecureHash callback: ", vnp_SecureHash)
-if (secureHash !== vnp_SecureHash) {
-  throw new Error("INVALID_VNPAY_SIGNATURE");
-}
-
-
-    if (secureHash !== vnp_SecureHash) {
+    const result = await gateway.verifyPayment({ ...query });
+    logger.info("VNPay callback verification result:", result);
+    if (result.status === "FAILED") {
       throw new Error("INVALID_VNPAY_SIGNATURE");
     }
 
-    const payment = await Payment.findOne({ transactionId: vnp_Params["vnp_TxnRef"] });
-    if (!payment) throw new Error("PAYMENT_NOT_FOUND");
+    const payment = await Payment.findOne({
+      transactionId: query["vnp_TxnRef"],
+    });
+    if (!payment) {
+      logger.error(
+        "Payment not found for VNPay callback:",
+        query["vnp_TxnRef"],
+      );
+      throw new Error("PAYMENT_NOT_FOUND");
+    }
 
     const orderId = payment.orderId;
 
-    if (vnp_Params["vnp_ResponseCode"] === "00") {
+    if (result.status === "PAID") {
       // Thanh toán thành công
       payment.status = "PAID";
       payment.paidTimestamp = new Date();
-      payment.rawResponse = vnp_Params;
+      payment.rawResponse = result.rawResponse;
       await payment.save();
 
       await Order.findByIdAndUpdate(orderId, {
@@ -46,7 +41,7 @@ if (secureHash !== vnp_SecureHash) {
       // Thanh toán thất bại
       payment.status = "FAILED";
       payment.failedTimestamp = new Date();
-      payment.rawResponse = vnp_Params;
+      payment.rawResponse = result.rawResponse;
       await payment.save();
 
       await Order.findByIdAndUpdate(orderId, {
@@ -54,7 +49,5 @@ if (secureHash !== vnp_SecureHash) {
         failedTimestamp: new Date(),
       });
     }
-
-    return { message: "ok" };
   }
 }

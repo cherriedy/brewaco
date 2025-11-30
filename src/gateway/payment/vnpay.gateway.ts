@@ -11,11 +11,11 @@ export class VNPayGateway implements PaymentGateway {
   private readonly vnpayUrl: string;
 
   constructor() {
-    this.version = process.env.VNPAY_VERSION || "";
-    this.tmnCode = process.env.VNPAY_TMN_CODE || "";
-    this.hashSecret = process.env.VNPAY_HASH_SECRET || "";
-    this.vnpayUrl = process.env.VNPAY_URL || "";
-    this.returnUrl = process.env.VNPAY_RETURN_URL || "";
+    this.version = "2.1.0";
+    this.tmnCode = process.env.VNP_TMN_CODE || "";
+    this.hashSecret = process.env.VNP_HASH_SECRET || "";
+    this.vnpayUrl = process.env.VNP_URL || "";
+    this.returnUrl = process.env.VNP_RETURN_URL || "";
   }
 
   async createPayment(
@@ -74,7 +74,7 @@ export class VNPayGateway implements PaymentGateway {
 
     // Check response code
     const responseCode = params.vnp_ResponseCode;
-    const status = responseCode === "00" ? "SUCCESS" : "FAILED";
+    const status: "PAID" | "FAILED" = responseCode === "00" ? "PAID" : "FAILED";
 
     return {
       amount: parseInt(params.vnp_Amount || "0") / 100,

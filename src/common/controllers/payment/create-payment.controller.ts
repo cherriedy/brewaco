@@ -7,11 +7,12 @@ import { z } from "zod";
 import { CreateMomoPaymentService } from "#common/services/payment/create-momo-payment.service.js";
 import { CreateCodPaymentService } from "#common/services/payment/create-cod-payment.service.js";
 import { CreateVnpayPaymentService } from "#common/services/payment/create-vnpay-payment.service.js";
+import { getClientIp } from "#common/utils/get-client-ip.js";
 
 export const createPayment = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const locale = req.locale;
 
@@ -22,8 +23,13 @@ export const createPayment = async (
     if (validated.paymentMethod === "MOMO") {
       result = await CreateMomoPaymentService.execute(validated);
     } else if (validated.paymentMethod === "VNPAY") {
-      result = await CreateVnpayPaymentService.execute(validated);
-    }else if (validated.paymentMethod === "COD") {
+      // Get actual client IP address
+      const ipAddr = getClientIp(req);
+      result = await CreateVnpayPaymentService.execute({
+        ...validated,
+        ipAddr,
+      });
+    } else if (validated.paymentMethod === "COD") {
       result = await CreateCodPaymentService.execute(validated);
     } else {
       return apiError(res, t("payment.unsupportedMethod", locale));

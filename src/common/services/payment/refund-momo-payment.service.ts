@@ -1,17 +1,13 @@
-import crypto from "crypto";
-import axios from "axios";
 import { Payment } from "#common/models/payment.model.js";
 import { Order } from "#common/models/order.model.js";
-
-const partnerCode = process.env.MOMO_PARTNER_CODE!;
-const accessKey = process.env.MOMO_ACCESS_KEY!;
-const secretKey = process.env.MOMO_SECRET_KEY!;
+import MomoGateway from "#gateway/payment/momo.gateway.js";
 
 export class RefundMomoPaymentService {
   static async execute(paymentId: string) {
     const payment = await Payment.findById(paymentId);
     if (!payment) throw new Error("PAYMENT_NOT_FOUND");
-    if (payment.paymentMethod !== "MOMO") throw new Error("INVALID_PAYMENT_METHOD");
+    if (payment.paymentMethod !== "MOMO")
+      throw new Error("INVALID_PAYMENT_METHOD");
     if (payment.status !== "PAID") throw new Error("PAYMENT_NOT_PAID");
 
     const order = await Order.findById(payment.orderId);
@@ -21,39 +17,20 @@ export class RefundMomoPaymentService {
       throw new Error("ORDER_NOT_CANCELLED");
     }
 
-    const requestId = `${payment._id}_${Date.now()}`;
-    const amount = Number(payment.amount)!;
-    const orderId = `${payment.orderId}_${Date.now()}`;
+    const momoGateway = new MomoGateway();
+    const success = await momoGateway.refundPayment(
+      payment.transactionId as string,
+      Number(payment.amount),
+    );
 
-    const rawSignature =
-      `accessKey=${accessKey}&amount=${amount}&description=Refund test` +
-      `&orderId=${orderId}&partnerCode=${partnerCode}` +
-      `&requestId=${requestId}&transId=${payment.transactionId}`;
-
-    const signature = crypto.createHmac("sha256", secretKey).update(rawSignature).digest("hex");
-
-    const requestBody = {
-      partnerCode,
-      accessKey,
-      requestId,
-      amount,
-      orderId,
-      transId: payment.transactionId,
-      lang: "vi",
-      description: "Refund test",
-      signature,
-    };
-    const response = await axios.post("https://test-payment.momo.vn/v2/gateway/api/refund", requestBody);
-
-    if (response.data.resultCode === 0) {
+    if (success) {
       payment.status = "REFUNDED";
       payment.refundedTimestamp = new Date();
-      payment.rawResponse = response.data;
+      // Optionally, you may want to store the raw response if needed
       await payment.save();
-
-      return { message: "Refund successful", data: response.data };
+      return { message: "Refund successful" };
     } else {
-      throw new Error(`Refund failed: ${response.data.message || response.data.localMessage}`);
+      throw new Error("Refund failed");
     }
   }
 }
